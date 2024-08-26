@@ -175,13 +175,17 @@
 												</div>
 							                    <p class="card-text text-muted small" th:text="${#dates.format(review.reviewedAt, 'yyyy年MM月dd日')}"></p>
 							                    <p class="card-text" th:text="${review.review}"></p>
-							                    
 							                </div>
 							            </div>
 							        </div>
-			    				</div>
+			    				</div>	
 							</div>
-                 		</div>	
+                 		</div>
+                 			<div class="text-center">
+			    					<div th:if="${reviews.size() >= 6}">
+										<a th:href="@{/reviews/list}">すべてのレビューを見る</a>
+									</div>
+							</div>	
 					 </div>	
                  </div>
                  

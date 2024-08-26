@@ -80,15 +80,22 @@ public class HouseController {
     public String show(@PathVariable(name = "id") Integer id, Model model) {
         House house = houseRepository.getReferenceById(id);
         List<Review> reviews = reviewRepository.findByHouse(house);
+        List<Review> limitedReviews = reviews.size() > 6 ? reviews.subList(0, 6) : reviews;
 
         model.addAttribute("house", house);
-        model.addAttribute("reviews", reviews);
+        model.addAttribute("reviews", limitedReviews);
         model.addAttribute("reservationInputForm", new ReservationInputForm());
 
         return "houses/show";
     }
+    
+    @GetMapping("/reviews")
+    public String listAllReviews(@PathVariable(name = "id")Integer id,Model model) {
+    	House house = houseRepository.getReferenceById(id);
+        List<Review> allReviews = reviewRepository.findByHouse(house);
+        model.addAttribute("reviews", allReviews);
+        return "reviews/list";
+    }
 
-    
-    
 
 }
