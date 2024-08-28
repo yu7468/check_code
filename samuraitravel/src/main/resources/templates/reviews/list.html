@@ -1,18 +1,73 @@
 <!DOCTYPE html>
- <html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">    
-     <head>
-         <div th:replace="~{fragment :: meta}"></div>   
-              
-         <div th:replace="~{fragment :: styles}"></div>
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">    
+	<head>
+		<div th:replace="~{fragment :: meta}"></div>   
+		<div th:replace="~{fragment :: styles}"></div>
            <!-- Flatpickr -->
-         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
          
-         <title>レビュー一覧ページ</title>   
-     </head>
-     <body>
-         <div class="samuraitravel-wrapper">
+		<title>レビュー一覧ページ</title>   
+	</head>
+	<body>
+		<div class="samuraitravel-wrapper">
              <!-- ヘッダー -->
              <div th:replace="~{fragment :: header}"></div>
-         </div>
-     </body>
- </html>
+         
+		<main>
+			<div class="container pt-4 pb-5 samuraitravel-container">
+				<div class="row justify-content-center">
+					<div class="col-xxl-9 col-xl-10 col-lg-11">
+						<nav class="mb-4" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+							<ol class="breadcrumb mb-0">                        
+									<li class="breadcrumb-item"><a th:href="@{/}">ホーム</a></li>
+									<li class="breadcrumb-item"><a th:href="@{/houses}">民宿一覧</a></li>
+									<li class="breadcrumb-item" aria-current="page">民宿詳細</li>
+									<li class="breadcrumb-item active" aria-current="page">レビュー一覧</li>
+							</ol>
+						</nav>
+                             
+				<h1 class="mb-4 text-center" th:text="${house.getName()} + 'のレビュー一覧'"></h1>
+                             
+						<div class="container pt-4 pb-5 samuraitravel-container">
+							<div class="row justify-content-center">
+			                 	<div class="col-xxl-9 col-xl-10 col-lg-11">
+									<div class="reviews-page">
+										<div class="row">
+												<div class="text-center">
+													<div th:if="${#lists.isEmpty(reviews)}">
+														<p>まだレビューがありません</p>
+													</div>
+												</div>
+										<div th:each="review : ${reviews}" class="col-md-6 ">
+											<div class="card mb-4">
+												<div class="card-body">
+													<h5 class="card-title" th:text="${review.user.name}"></h5>
+													<div class="review-rating">
+														<span class="star" th:switch="${review.rankStar}">
+															<span th:case="1">&#9733;&#9734;&#9734;&#9734;&#9734;</span>
+															<span th:case="2">&#9733;&#9733;&#9734;&#9734;&#9734;</span>
+										 					<span th:case="3">&#9733;&#9733;&#9733;&#9734;&#9734;</span>
+										 					<span th:case="4">&#9733;&#9733;&#9733;&#9733;&#9734;</span>
+															<span th:case="5">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+														</span>
+													</div>
+													<p class="card-text text-muted small" th:text="${#dates.format(review.reviewedAt, 'yyyy年MM月dd日')}"></p>
+													<p class="card-text" th:text="${review.review}"></p>
+												</div>
+											</div>
+										</div>
+						    			</div>	
+									</div>
+								</div>
+							</div>	
+						</div>     
+					</div>
+				</div>
+			</div>
+				 
+		</main>
+		</div>
+         
+         
+	</body>
+</html>

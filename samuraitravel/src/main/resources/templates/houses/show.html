@@ -160,10 +160,12 @@
 								 	</div>
 			                 	</div>
 								<div class="row">
-							        <div th:each="review : ${reviews}" class="col-md-6 ">
-										<div th:if="#lists.isEmpty(reviews)}">
+									<div class="text-center">
+										<div th:if="${#lists.isEmpty(reviews)}">
 											<p>まだレビューがありません</p>
 										</div>
+									</div>
+							        <div th:each="review : ${reviews}" class="col-md-6 ">
 							            <div class="card mb-4">
 							                <div class="card-body">
 							                    <h5 class="card-title" th:text="${review.user.name}"></h5>
@@ -192,7 +194,7 @@
                  		</div>
                  			<div class="text-center">
 			    					<div th:if="${reviews.size() >= 6}">
-										<a th:href="@{/reviews/list}">すべてのレビューを見る</a>
+										<a th:href="@{/reviews/list(id=${house.getId()})}">すべてのレビューを見る</a>
 									</div>
 							</div>	
 					 </div>	
