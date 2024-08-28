@@ -161,9 +161,18 @@
 			                 	</div>
 								<div class="row">
 							        <div th:each="review : ${reviews}" class="col-md-6 ">
+										<div th:if="#lists.isEmpty(reviews)}">
+											<p>まだレビューがありません</p>
+										</div>
 							            <div class="card mb-4">
 							                <div class="card-body">
 							                    <h5 class="card-title" th:text="${review.user.name}"></h5>
+							                    <!--
+													<div th:if="${review.user.name} == ${user.name}">
+            										<a th:href="@{/reviews/update}">編集</a>
+            										<a th:href="@{/reviews/delete}">削除</a>
+        										</div>
+        										-->
 							                    <div class="review-rating">
 							    					<span class="star" th:switch="${review.rankStar}">
 							        					<span th:case="1">&#9733;&#9734;&#9734;&#9734;&#9734;</span>

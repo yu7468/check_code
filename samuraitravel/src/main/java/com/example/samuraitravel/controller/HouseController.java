@@ -89,13 +89,7 @@ public class HouseController {
         return "houses/show";
     }
     
-    @GetMapping("/reviews")
-    public String listAllReviews(@PathVariable(name = "id")Integer id,Model model) {
-    	House house = houseRepository.getReferenceById(id);
-        List<Review> allReviews = reviewRepository.findByHouse(house);
-        model.addAttribute("reviews", allReviews);
-        return "reviews/list";
-    }
+   
 
 
 }
