@@ -6,6 +6,10 @@ html {
    font-family: 'Noto Sans JP', sans-serif;  
  }
  
+ .text-red {
+    color: red;
+}
+ 
  h1 {
    font-size: 1.5rem;
  }

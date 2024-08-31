@@ -10,27 +10,33 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.example.samuraitravel.entity.House;
 import com.example.samuraitravel.entity.Review;
+import com.example.samuraitravel.entity.User;
 import com.example.samuraitravel.repository.HouseRepository;
 import com.example.samuraitravel.repository.ReviewRepository;
+import com.example.samuraitravel.repository.UserRepository;
 
 
 @Controller
 public class ReviewController {
 	private final HouseRepository houseRepository; 
+	private final UserRepository userRepository;
 	private final ReviewRepository reviewRepository;
 
     @Autowired
-    public ReviewController(HouseRepository houseRepository, ReviewRepository reviewRepository) {
+    public ReviewController(HouseRepository houseRepository, UserRepository userRepository,ReviewRepository reviewRepository) {
 	    this.houseRepository = houseRepository;
+	    this.userRepository = userRepository;
 	    this.reviewRepository = reviewRepository;
 	}  
 
     @GetMapping("/reviews/list/{id}")
     public String listReviews(@PathVariable(name = "id") Integer id, Model model) {
+    	User user =userRepository.getReferenceById(id);
         House house = houseRepository.getReferenceById(id);
         List<Review> reviews = reviewRepository.findByHouse(house);
 
         model.addAttribute("house", house);
+        model.addAttribute("user", user);
         model.addAttribute("reviews", reviews);
 
         return "reviews/list";
