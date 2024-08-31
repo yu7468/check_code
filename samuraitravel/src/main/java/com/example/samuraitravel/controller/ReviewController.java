@@ -42,9 +42,19 @@ public class ReviewController {
         return "reviews/list";
     } 
     
+//    @GetMapping
+//    public String list(
+//            @PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable,
+//            Model model) {
+//        Page<Review> reviewPage = reviewRepository.findAllByOrderByCreatedAtDesc(pageable);
+//
+//        model.addAttribute("reviewPage", reviewPage);
+//        return "reviews/list";
+//    }
+    
     @GetMapping("/reviews/update/{id}")
     public String showUpdateForm(@PathVariable("id") long id, Model model) {
-        return "updateForm";
+        return "reviews/update";
     }
 
     @GetMapping("/reviews/delete/{id}")

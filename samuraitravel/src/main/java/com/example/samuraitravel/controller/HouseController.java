@@ -88,8 +88,5 @@ public class HouseController {
 
         return "houses/show";
     }
-    
-    
-
 
 }
