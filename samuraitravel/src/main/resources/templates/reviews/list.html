@@ -33,11 +33,6 @@
 			                 	<div class="col-xxl-9 col-xl-10 col-lg-11">
 									<div class="reviews-page">
 										<div class="row">
-												<div class="text-center">
-													<div th:if="${#lists.isEmpty(reviews)}">
-														<p>まだレビューがありません</p>
-													</div>
-												</div>
 										<div th:each="review : ${reviews}" class="col-md-6 ">
 											<div class="card mb-4">
 												<div class="card-body">

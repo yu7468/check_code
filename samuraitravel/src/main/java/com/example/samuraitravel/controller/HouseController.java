@@ -89,7 +89,7 @@ public class HouseController {
         return "houses/show";
     }
     
-    @GetMapping("/reviews/list")
+    @GetMapping("/reviews/list/{id}")
     public String listReviews(@PathVariable(name = "id") Integer id, Model model) {
         House house = houseRepository.getReferenceById(id);
         List<Review> reviews = reviewRepository.findByHouse(house);
