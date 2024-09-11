@@ -1,5 +1,7 @@
 package com.example.samuraitravel.service;
 
+import java.sql.Timestamp;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,8 +35,14 @@ public class ReviewService {
         
         review.setRankStar(reviewEditForm.getRankStar());
         review.setReview(reviewEditForm.getReview());
+        review.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
   
         reviewRepository.save(review);
+    }
+	
+	@Transactional
+    public void delete(Integer id) {
+        reviewRepository.deleteById(id);
     }
 
 	

@@ -45,7 +45,15 @@
 															<span th:case="5">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
 														</span>
 													</div>
-													<p class="card-text text-muted small" th:text="${#dates.format(review.reviewedAt, 'yyyy年MM月dd日')}"></p>
+													<p class="card-text text-muted small">
+														<span th:if="${review.updatedAt != null and review.updatedAt != review.reviewedAt}" 
+															  th:text="${#dates.format(review.updatedAt, 'yyyy年MM月dd日')}">
+														</span>
+
+														<span th:if="${review.updatedAt == null or review.updatedAt == review.reviewedAt}" 
+															  th:text="${#dates.format(review.reviewedAt, 'yyyy年MM月dd日')}">
+														</span>
+													</p>
 													<p class="card-text" th:text="${review.review}"></p>
 												</div>
 											</div>

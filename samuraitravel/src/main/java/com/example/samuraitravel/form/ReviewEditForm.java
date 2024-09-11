@@ -13,7 +13,7 @@ public class ReviewEditForm {
 	@NotNull
     private Integer id;
 	
-	@NotBlank(message = "")
+	@NotNull(message = "評価を選択してください。")
     private Integer rankStar;
  
     @NotBlank(message = "レビュー内容を入れてください。")
