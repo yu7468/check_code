@@ -17,7 +17,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.samuraitravel.entity.House;
 import com.example.samuraitravel.entity.Review;
-import com.example.samuraitravel.entity.User;
 import com.example.samuraitravel.form.ReviewEditForm;
 import com.example.samuraitravel.repository.HouseRepository;
 import com.example.samuraitravel.repository.ReviewRepository;
@@ -40,14 +39,13 @@ public class ReviewController {
 	    this.reviewService = reviewService;
 	}  
 
-    @GetMapping("/reviews/list/{id}")
-    public String listReviews(@PathVariable(name = "id") Integer id, Model model, @PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC)Pageable pageable) {
-    	User user =userRepository.getReferenceById(id);
-        House house = houseRepository.getReferenceById(id);
-        Page<Review> reviewPage = reviewRepository.findAll(pageable);
+    @GetMapping("/reviews/list/{houseId}")
+    public String list(@PathVariable(name = "houseId") Integer houseId, Model model, @PageableDefault(page = 0, size = 10, sort = "houseId", direction = Direction.DESC)Pageable pageable) {
+//    	User user =userRepository.getReferenceById(id);
+        House house = houseRepository.getReferenceById(houseId);
+        Page<Review> reviewPage = reviewRepository.findByHouse(house,pageable);
 
         model.addAttribute("house", house);
-        model.addAttribute("user", user);
         model.addAttribute("reviewPage", reviewPage);
 
         return "reviews/list";
