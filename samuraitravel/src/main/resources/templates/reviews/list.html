@@ -32,7 +32,7 @@
 							<div class="row justify-content-center">
 									<div class="reviews-page">
 										<div class="row">
-										<div th:each="review : ${reviews}" class="col-md-6 ">
+										<div th:each="review : ${reviewPage}" class="col-md-6 ">
 											<div class="card mb-4">
 												<div class="card-body">
 													<h5 class="card-title" th:text="${review.user.name}"></h5>
@@ -53,20 +53,20 @@
 						    			</div>	
 									</div>
 									<!-- ページネーション -->
-									<div th:if="${reviewPage.getTotalPages() > 1}" class="d-flex justify-content-center mt-4">
+									<div th:if="${reviewPage.getTotalPages() > 1}" class="d-flex justify-content-center">
 										<nav aria-label="レビュー一覧ページ">
 											<ul class="pagination">
 												<li class="page-item">
 													<span th:if="${reviewPage.isFirst()}" class="page-link disabled">前</span>
-													<a th:unless="${reviewPage.isFirst()}" th:href="@{/reviews(page=${reviewPage.getNumber() - 1})}" class="page-link">前</a>
+													<a th:unless="${reviewPage.isFirst()}" th:href="@{/reviews(page = ${reviewPage.getNumber() - 1}, keyword = ${keyword})}" class="page-link samuraitravel-page-link">前</a>
 												</li>
 												<li th:each="i : ${#numbers.sequence(0, reviewPage.getTotalPages() - 1)}" class="page-item">
-													<span th:if="${i == reviewPage.getNumber()}" class="page-link active" th:text="${i + 1}"></span>
-													<a th:unless="${i == reviewPage.getNumber()}" th:href="@{/reviews(page=${i})}" class="page-link" th:text="${i + 1}"></a>
+													<span th:if="${i == reviewPage.getNumber()}" class="page-link active samuraitravel-active" th:text="${i + 1}"></span>
+													<a th:unless="${i == reviewPage.getNumber()}" th:href="@{/reviews(page = ${i}, keyword = ${keyword})}" class="page-link samuraitravel-page-link" th:text="${i + 1}"></a>
 												</li>
 												<li class="page-item">                        
 													<span th:if="${reviewPage.isLast()}" class="page-link disabled">次</span>
-													<a th:unless="${reviewPage.isLast()}" th:href="@{/reviews(page=${reviewPage.getNumber() + 1})}" class="page-link">次</a>
+													<a th:unless="${reviewPage.isLast()}" th:href="@{/reviews(page = ${reviewPage.getNumber() + 1}, keyword = ${keyword})}" class="page-link samuraitravel-page-link">次</a>
 												</li>
 											</ul>
 										</nav> 
