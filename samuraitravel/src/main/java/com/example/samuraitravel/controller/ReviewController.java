@@ -27,20 +27,18 @@ import com.example.samuraitravel.service.ReviewService;
 @Controller
 public class ReviewController {
 	private final HouseRepository houseRepository; 
-	private final UserRepository userRepository;
 	private final ReviewRepository reviewRepository;
 	private final ReviewService reviewService;
 
     @Autowired
     public ReviewController(HouseRepository houseRepository, UserRepository userRepository,ReviewRepository reviewRepository, ReviewService reviewService) {
 	    this.houseRepository = houseRepository;
-	    this.userRepository = userRepository;
 	    this.reviewRepository = reviewRepository;
 	    this.reviewService = reviewService;
 	}  
 
     @GetMapping("/reviews/list/{houseId}")
-    public String list(@PathVariable(name = "houseId") Integer houseId, Model model, @PageableDefault(page = 0, size = 10, sort = "houseId", direction = Direction.ASC)Pageable pageable) {
+    public String list(@PathVariable(name = "houseId") int houseId, Model model, @PageableDefault(page = 0, size = 10, sort = "houseId", direction = Direction.ASC)Pageable pageable) {
 //    	User user =userRepository.getReferenceById(id);
         House house = houseRepository.getReferenceById(houseId);
         Page<Review> reviewPage = reviewRepository.findByHouse(house,pageable);
@@ -64,7 +62,7 @@ public class ReviewController {
         return "reviews/edit";
     }    
 
-    @PostMapping("/update")
+    @PostMapping("/reviews/update")
         public String update(@ModelAttribute @Validated ReviewEditForm reviewEditForm, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
     	if (bindingResult.hasErrors()) {
             return "reviews/edit";
@@ -73,6 +71,14 @@ public class ReviewController {
             redirectAttributes.addFlashAttribute("successMessage", "レビューを編集しました。");
             
             return "redirect:/houses/show";
-        }    
+        }
+    @PostMapping("/{id}/delete")
+    public String delete(@PathVariable(name = "id") Integer id, RedirectAttributes redirectAttributes) {        
+        reviewRepository.deleteById(id);
+                
+        redirectAttributes.addFlashAttribute("successMessage", "レビューを削除しました。");
+        
+        return "redirect:/reviews/list";
+    }
     
 }

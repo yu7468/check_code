@@ -168,19 +168,19 @@ html {
 }
 
 select.star {
-  appearance: none; /* デフォルトの矢印を非表示にする */
+  appearance: none; 
   -webkit-appearance: none;
   -moz-appearance: none;
-  padding-right: 24px; /* 矢印のスペースを確保 */
+  padding-right: 24px; 
 }
 
 .select-arrow-container::after {
-  content: '▼'; /* 矢印の内容 */
+  content: '▼'; 
   position: absolute;
-  right: 20px; /* 矢印の位置調整 */
+  right: 20px; 
   top: 50%;
   transform: translateY(-50%);
-  pointer-events: none; /* 矢印がクリックされないようにする */
+  pointer-events: none; 
 }
 
 
