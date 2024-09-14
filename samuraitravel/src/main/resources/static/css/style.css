@@ -154,12 +154,35 @@ html {
  .review-button-container {
     display: flex;
     justify-content: center;
-    margin-bottom: 20px; /* 可根据需要调整按钮与其他内容的间距 */
+    margin-bottom: 20px; 
 }
 
 .review-button {
     text-align: center;
 }
+
+.select-arrow-container {
+  position: relative;
+  display: flex; 
+  align-items: center; 
+}
+
+select.star {
+  appearance: none; /* デフォルトの矢印を非表示にする */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 24px; /* 矢印のスペースを確保 */
+}
+
+.select-arrow-container::after {
+  content: '▼'; /* 矢印の内容 */
+  position: absolute;
+  right: 20px; /* 矢印の位置調整 */
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none; /* 矢印がクリックされないようにする */
+}
+
 
  
  

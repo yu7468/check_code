@@ -40,7 +40,7 @@ public class ReviewController {
 	}  
 
     @GetMapping("/reviews/list/{houseId}")
-    public String list(@PathVariable(name = "houseId") Integer houseId, Model model, @PageableDefault(page = 0, size = 10, sort = "houseId", direction = Direction.DESC)Pageable pageable) {
+    public String list(@PathVariable(name = "houseId") Integer houseId, Model model, @PageableDefault(page = 0, size = 10, sort = "houseId", direction = Direction.ASC)Pageable pageable) {
 //    	User user =userRepository.getReferenceById(id);
         House house = houseRepository.getReferenceById(houseId);
         Page<Review> reviewPage = reviewRepository.findByHouse(house,pageable);
@@ -53,10 +53,13 @@ public class ReviewController {
     
 
     
-    @GetMapping("/edit")
-    public String edit(@PathVariable(name = "id") Integer id, Model model) {        
-        Review review = reviewRepository.getReferenceById(id);
+    @GetMapping("/reviews/edit/{reviewId}")
+    public String edit(@PathVariable(name = "reviewId") Integer reviewId, Model model) {        
+        Review review = reviewRepository.getReferenceById(reviewId);
+        House house = houseRepository.getReferenceById(review.getHouse().getId());
         ReviewEditForm reviewEditForm = new ReviewEditForm(review.getId(), review.getRankStar(), review.getReview());
+        
+        model.addAttribute("house", house);
         model.addAttribute("reviewEditForm", reviewEditForm);        
         return "reviews/edit";
     }    
