@@ -5,7 +5,9 @@ import java.sql.Timestamp;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.samuraitravel.entity.House;
 import com.example.samuraitravel.entity.Review;
+import com.example.samuraitravel.entity.User;
 import com.example.samuraitravel.form.ReviewEditForm;
 import com.example.samuraitravel.form.ReviewPostForm;
 import com.example.samuraitravel.repository.ReviewRepository;
@@ -20,14 +22,16 @@ public class ReviewService {
 	
 	
 	@Transactional
-    public Review create(ReviewPostForm reviewPostForm) {
-        Review review = new Review();
-        
-        review.setRankStar(reviewPostForm.getRankStar());
-        review.setReview(reviewPostForm.getReview());       
-        
-        return reviewRepository.save(review);
-    }    
+	public Review create(ReviewPostForm reviewPostForm, House house, User user) {
+	    Review review = new Review();
+	    review.setRankStar(reviewPostForm.getRankStar());
+	    review.setReview(reviewPostForm.getReview());
+	    review.setHouse(house);  
+	    review.setUser(user); 
+	    
+	    return reviewRepository.save(review);
+	}
+
 
 	@Transactional
     public void update(ReviewEditForm reviewEditForm) {

@@ -156,7 +156,7 @@
 			                 <h1 class="mb-4 text-center">レビュー</h1>
 			                 	<div sec:authorize="isAuthenticated()" class="review-button-container">
 								 	<div class="review-button">
-									 	<a th:href="@{/reviews/post}" class="btn text-white shadow-sm samuraitravel-btn">レビューを投稿する</a>
+									 	<a th:href="@{/reviews/post(houseId=${houseId}, userId=${userId})}" class="btn text-white shadow-sm samuraitravel-btn">レビューを投稿する</a>
 								 	</div>
 			                 	</div>
 								<div class="row">
@@ -186,7 +186,7 @@
                                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
                                                      </div>
                                                      <div class="modal-footer">
-                                                         <form method="post"th:action="@{/reviews/{id}/delete(id=${review.getId()})}">
+                                                         <form method="post" th:action="@{/reviews/{id}/delete(id=${review.getId()})}">
                                                              <button type="submit" class="btn samuraitravel-btn-danger text-white shadow-sm">削除</button>
                                                          </form>
                                                      </div>

@@ -5,14 +5,13 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+
 @Data
 @AllArgsConstructor
 
 public class ReviewPostForm {
-	@NotNull
-    private Integer id;
 	
-	@NotBlank(message = "")
+	@NotNull(message = "")
     private Integer rankStar;
  
     @NotBlank(message = "レビュー内容を入れてください。")
