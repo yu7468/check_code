@@ -42,7 +42,7 @@ public class ReviewController {
 	    this.reviewService = reviewService;
 	}  
     
-    @GetMapping("/post({houseId},{userId})")
+    @GetMapping("/reviews/post/{houseId}")
     public String post(@RequestParam Integer houseId, @RequestParam Integer userId, Model model) {
     	ReviewPostForm reviewPostForm = new ReviewPostForm(null, "");
     	model.addAttribute("reviewPostForm", reviewPostForm);
@@ -51,7 +51,7 @@ public class ReviewController {
         return "houses/show";
     } 
     
-    @PostMapping("/post({houseId},{userId})")
+    @PostMapping("/reviews/post/")
     public String post(@ModelAttribute @Validated ReviewPostForm reviewPostForm, BindingResult bindingResult, @RequestParam Integer houseId, @RequestParam Integer userId, RedirectAttributes redirectAttributes) {
     	if (bindingResult.hasErrors()) {
             return "houses/show"; 
@@ -65,7 +65,7 @@ public class ReviewController {
         return "redirect:/";
     }
 
-    @GetMapping("/reviews/list/{houseId}")
+    @GetMapping("/reviews/list/")
     public String list(@PathVariable(name = "houseId") int houseId, Model model, @PageableDefault(page = 0, size = 10, sort = "houseId", direction = Direction.ASC)Pageable pageable) {
 
         House house = houseRepository.getReferenceById(houseId);
@@ -98,7 +98,7 @@ public class ReviewController {
     	reviewService.update(reviewEditForm);
             redirectAttributes.addFlashAttribute("successMessage", "レビューを編集しました。");
             
-            return "redirect:/reviews";
+            return "redirect:/";
         }
     
     @PostMapping("/reviews/{id}/delete")
@@ -106,7 +106,7 @@ public class ReviewController {
     	reviewRepository.deleteById(id);    
         redirectAttributes.addFlashAttribute("successMessage", "レビューを削除しました。");
         
-        return "redirect:/reviews/list";
+        return "redirect:/";
     }
     
 }

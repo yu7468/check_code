@@ -112,13 +112,6 @@ public class ReservationController {
         return "reservations/confirm";
     }
     
-    /*
-    @PostMapping("/houses/{id}/reservations/create")
-    public String create(@ModelAttribute ReservationRegisterForm reservationRegisterForm) {                
-        reservationService.create(reservationRegisterForm);        
-        
-        return "redirect:/reservations?reserved";
-    }
-    */
+   
 
 }
