@@ -25,6 +25,20 @@
                                      <li class="breadcrumb-item active" aria-current="page">民宿詳細</li>
                                  </ol>
                              </nav> 
+                             <!--
+                             <div sec:authorize="isAuthenticated()" class="d-flex justify-content-end">
+    							<form th:if="${isFavorite}" th:action="@{/favorites/remove(houseId=${house.id}, userId=${user.id})}" method="post">
+									<button type="submit" class="btn btn-danger">
+										<i class="fa fa-heart"></i> お気に入り解除
+									</button>
+								</form>
+								<form th:unless="${isFavorite}" th:action="@{/favorites/add(houseId=${house.id}, userId=${user.id})}" method="post">
+									<button type="submit" class="btn btn-outline-danger">
+										<i class="fa fa-heart"></i> お気に入りに追加
+									</button>
+								</form>
+							</div>
+							-->
                              
                              <h1 class="mb-4 text-center" th:text="${house.getName()}"></h1>                                                           
                              
@@ -156,7 +170,7 @@
 			                 <h1 class="mb-4 text-center">レビュー</h1>
 			                 	<div sec:authorize="isAuthenticated()" class="review-button-container">
 								 	<div class="review-button">
-									 	<a th:href="@{/reviews/post(houseId=${houseId}, userId=${userId})}" class="btn text-white shadow-sm samuraitravel-btn">レビューを投稿する</a>
+									 	<a th:href="@{/reviews/post/{id}(id=${house.getId()})}" class="btn text-white shadow-sm samuraitravel-btn">レビューを投稿する</a>
 								 	</div>
 			                 	</div>
 								<div class="row">

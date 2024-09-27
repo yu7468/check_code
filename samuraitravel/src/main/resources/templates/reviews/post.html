@@ -28,9 +28,9 @@
 						</nav>
 						
 						<h1 class="mb-4 text-center" th:text="${house.getName()} + 'のレビュー投稿'"></h1>
-						<form method="post" th:action="@{reviews/post(houseId=${houseId}, userId=${userId})}" th:object="${reviewPostForm}">
-							<input type="hidden" name="houseId" th:value="${house.id}">
-							<input type="hidden" name="userId" th:value="${user.id}">
+						<form method="post" th:action="@{reviews/post}" th:object="${reviewPostForm}">
+							<input type="hidden" name="houseId" th:value="${house.getId()}">
+							<input type="hidden" name="userId" th:value="${user.getId()}">
 
                                  <div class="form-group row mb-3 align-items-center">
                                      <div class="col-md-5 align-items-center">
@@ -44,11 +44,11 @@
                                      <div class="col-md-7 select-arrow-container d-flex align-items-center">                                                                       
                                          <label for="dropdown" ></label>
 											<select class="star form-control" name="rankStar" id="rankStar" th:value="${reviewPostForm.rankStar}" required>
-												<option value="1" th:selected="${review?.setRankStar() == 1}">&#9733;&#9734;&#9734;&#9734;&#9734;</option>
-												<option value="2" th:selected="${review?.setRankStar() == 2}">&#9733;&#9733;&#9734;&#9734;&#9734;</option>
-												<option value="3" th:selected="${review?.setRankStar() == 3}">&#9733;&#9733;&#9733;&#9734;&#9734;</option>
-												<option value="4" th:selected="${review?.setRankStar() == 4}">&#9733;&#9733;&#9733;&#9733;&#9734;</option>
-												<option value="5" th:selected="${review?.setRankStar() == 5}">&#9733;&#9733;&#9733;&#9733;&#9733;</option>
+												<option value="1" th:selected="${reviewPostForm.rankStar == 1}">&#9733;&#9734;&#9734;&#9734;&#9734;</option>
+												<option value="2" th:selected="${reviewPostForm.rankStar == 2}">&#9733;&#9733;&#9734;&#9734;&#9734;</option>
+												<option value="3" th:selected="${reviewPostForm.rankStar == 3}">&#9733;&#9733;&#9733;&#9734;&#9734;</option>
+												<option value="4" th:selected="${reviewPostForm.rankStar == 4}">&#9733;&#9733;&#9733;&#9733;&#9734;</option>
+												<option value="5" th:selected="${reviewPostForm.rankStar == 5}">&#9733;&#9733;&#9733;&#9733;&#9733;</option>
 											</select>
                                      </div>
                                  </div>

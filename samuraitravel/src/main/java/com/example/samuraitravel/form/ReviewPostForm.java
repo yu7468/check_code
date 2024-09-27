@@ -11,6 +11,9 @@ import lombok.Data;
 
 public class ReviewPostForm {
 	
+//	@NotNull
+//    private Integer id;
+	
 	@NotNull(message = "")
     private Integer rankStar;
  

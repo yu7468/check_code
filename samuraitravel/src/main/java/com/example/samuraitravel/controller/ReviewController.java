@@ -42,7 +42,7 @@ public class ReviewController {
 	    this.reviewService = reviewService;
 	}  
     
-    @GetMapping("/reviews/post/{houseId}")
+    @GetMapping("/reviews/post")
     public String post(@RequestParam Integer houseId, @RequestParam Integer userId, Model model) {
     	ReviewPostForm reviewPostForm = new ReviewPostForm(null, "");
     	model.addAttribute("reviewPostForm", reviewPostForm);
@@ -51,8 +51,8 @@ public class ReviewController {
         return "houses/show";
     } 
     
-    @PostMapping("/reviews/post/")
-    public String post(@ModelAttribute @Validated ReviewPostForm reviewPostForm, BindingResult bindingResult, @RequestParam Integer houseId, @RequestParam Integer userId, RedirectAttributes redirectAttributes) {
+    @PostMapping("/reviews/create")
+    public String create(@ModelAttribute @Validated ReviewPostForm reviewPostForm, BindingResult bindingResult, @RequestParam Integer houseId, @RequestParam Integer userId, RedirectAttributes redirectAttributes) {
     	if (bindingResult.hasErrors()) {
             return "houses/show"; 
         }
