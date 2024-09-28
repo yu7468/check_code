@@ -24,6 +24,7 @@ public class ReviewService {
 	@Transactional
 	public Review create(ReviewPostForm reviewPostForm, House house, User user) {
 	    Review review = new Review();
+	    
 	    review.setRankStar(reviewPostForm.getRankStar());
 	    review.setReview(reviewPostForm.getReview());
 	    review.setHouse(house);  

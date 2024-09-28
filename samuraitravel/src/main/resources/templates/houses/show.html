@@ -25,20 +25,20 @@
                                      <li class="breadcrumb-item active" aria-current="page">民宿詳細</li>
                                  </ol>
                              </nav> 
-                             <!--
+                             
                              <div sec:authorize="isAuthenticated()" class="d-flex justify-content-end">
-    							<form th:if="${isFavorite}" th:action="@{/favorites/remove(houseId=${house.id}, userId=${user.id})}" method="post">
-									<button type="submit" class="btn btn-danger">
-										<i class="fa fa-heart"></i> お気に入り解除
-									</button>
-								</form>
-								<form th:unless="${isFavorite}" th:action="@{/favorites/add(houseId=${house.id}, userId=${user.id})}" method="post">
+								 <form th:unless="${isFavorite}" method="post">
 									<button type="submit" class="btn btn-outline-danger">
 										<i class="fa fa-heart"></i> お気に入りに追加
 									</button>
 								</form>
+    							<form th:if="${isFavorite}" method="post">
+									<button type="submit" class="btn btn-danger">
+										<i class="fa fa-heart"></i> お気に入り解除
+									</button>
+								</form>
 							</div>
-							-->
+						
                              
                              <h1 class="mb-4 text-center" th:text="${house.getName()}"></h1>                                                           
                              
