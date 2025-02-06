@@ -1,0 +1,164 @@
+ <!DOCTYPE html>
+ <html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">    
+     <head>
+         <div th:replace="~{fragment :: meta}"></div>   
+              
+         <div th:replace="~{fragment :: styles}"></div>
+         <!-- Flatpickr -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+           
+         <title>料理店詳細</title>   
+     </head>
+     <body>
+         <div class="nagoyameshi-wrapper">
+             <!-- ヘッダー -->
+             <div th:replace="~{fragment :: header}"></div>
+             
+             <main>
+                 <div class="container pt-4 pb-5 nagoyameshi-container">
+                     <div class="row justify-content-center">
+                         <div class="col-xxl-9 col-xl-10 col-lg-11">                          
+                             
+                             <h1 class="mb-4 text-center" th:text="${restaurant.getName()}"></h1>                                                           
+                             
+                             <div th:if="${errorMessage}" class="alert alert-danger">
+                                 <span th:text="${errorMessage}"></span>
+                             </div>                                                                         
+                             
+                             <div class="mb-4">
+                                 <img th:if="${restaurant.getImageName()}" th:src="@{/storage/__${restaurant.getImageName()}__}" class="w-100" alt="店舗画像">
+                                 <img th:unless="${restaurant.getImageName()}" th:src="@{/images/noImage.png}" class="w-100" alt="NO IMAGE">
+                             </div> 
+                             
+                             <div class="container">  
+                                 <div class="row">
+                                     <div class="col-lg-8 container mb-4">            
+                                         <div class="row pb-2 mb-2 border-bottom">
+                                             <div class="col-4">
+                                                 <span class="fw-bold">店名</span>
+                                             </div>
+                                             <div class="col">
+                                                 <span th:text="${restaurant.getName()}"></span>
+                                             </div>
+                                         </div>                    
+                     
+                                         <div class="row pb-2 mb-2 border-bottom">
+                                             <div class="col-4">
+                                                 <span class="fw-bold">説明</span>
+                                             </div>
+                                             <div class="col">
+                                                 <span class="nagoyameshi-pre-wrap" th:text="${restaurant.getDescription()}"></span>
+                                             </div>
+                                         </div>
+                                         
+                                         <div class="row pb-2 mb-2 border-bottom">
+                                             <div class="col-4">
+                                                 <span class="fw-bold">価格帯</span>
+                                             </div>
+                                             <div class="col">
+                                                 <span th:text="|¥${restaurant.getMinPrice()} ~ ¥${restaurant.getMaxPrice()}|"></span>
+                                             </div>
+                                         </div>
+                                         
+                                         <div class="row pb-2 mb-2 border-bottom">
+                                     		<div class="col-4">
+                                         		<span class="fw-bold">営業時間</span>
+                                     		</div>           
+                                     		<div class="col">
+                                         		<span th:text="|${restaurant.getOpen()} ~ ${restaurant.getClose()}|"></span>
+                                     		</div>
+                                 		</div>
+                                 		
+                                 <div class="row pb-2 mb-2 border-bottom">
+                                     <div class="col-4">
+                                         <span class="fw-bold">定休日</span>
+                                     </div>            
+                                     <div class="col">
+                                         <span class="nagoyameshi-pre-wrap" th:text="${restaurant.getClosedDay()}"></span>
+                                     </div>
+                                 </div>
+                                 
+                                 <div class="row pb-2 mb-2 border-bottom">
+                                     <div class="col-4">
+                                         <span class="fw-bold">カテゴリー</span>
+                                     </div>           
+                                     <div class="col">
+                                         <span th:text="${restaurant.getCategoriesName()}"></span>
+                                     </div>
+                                 </div>
+                                                                                  
+                                         <div class="row pb-2 mb-2 border-bottom">
+                                             <div class="col-4">
+                                                 <span class="fw-bold">郵便番号</span>
+                                             </div>
+                                             <div class="col">
+                                                 <span th:text="${restaurant.getPostalCode()}"></span>
+                                             </div>
+                                         </div>   
+                                         
+                                         <div class="row pb-2 mb-2 border-bottom">
+                                             <div class="col-4">
+                                                 <span class="fw-bold">住所</span>
+                                             </div>
+                                             <div class="col">
+                                                 <span th:text="${restaurant.getAddress()}"></span>
+                                             </div>
+                                         </div>   
+                                         
+                                         <div class="row pb-2 mb-2 border-bottom">
+                                             <div class="col-4">
+                                                 <span class="fw-bold">電話番号</span>
+                                             </div>                  
+                                             <div class="col">
+                                                 <span th:text="${restaurant.getPhoneNumber()}"></span>
+                                             </div>
+                                         </div>                                
+                                     </div>
+                                     
+                                     <!-- 只有VIP用户可以看到预约按钮 -->
+									<div sec:authorize="hasAuthority('ROLE_VIP')" class="col-lg-4 px-0 ps-lg-4 mb-4">                  
+									    <div class="card">
+									        <div class="card-body">       
+									            <a th:href="@{/vip/reservations/{restaurantId}/input(restaurantId=${restaurant.id})}"
+									               class="btn text-black shadow-sm w-100 nagoyameshi-btn">予約する</a>                                                                             
+									        </div>
+									    </div>  
+									</div>
+									
+									<!-- 未登录用户 -->
+									<div sec:authorize="isAnonymous()" class="col-lg-4 px-0 ps-lg-4 mb-4">                  
+									    <div class="card">
+									        <div class="card-body">       
+									            <p class="card-text">ログインは<a th:href="@{/login}">こちら</a></p>  
+									        </div>
+									    </div>  
+									</div>
+									
+									<!-- 登录但不是VIP用户 -->
+									<div sec:authorize="isAuthenticated() and !hasAuthority('ROLE_VIP')" class="col-lg-4 px-0 ps-lg-4 mb-4">                  
+									    <div class="card">
+									        <div class="card-body">       
+									            <p class="text-muted">予約機能またはレビュー機能はVIPユーザーのみご利用いただけます。</p>
+									            <p class="card-text">VIP登録は<a th:href="@{/general/user/upgrade}">こちら</a></p>   
+									        </div>
+									    </div>  
+									</div>
+                                                                                                                     
+                                 </div>                                                                                             
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+             </main>
+             
+             <!-- フッター -->
+             <div th:replace="~{fragment :: footer}"></div>
+         </div>    
+         
+         <div th:replace="~{fragment :: scripts}"></div>  
+         <!-- Flatpickr -->
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
+        <script th:src="@{/js/flatpickr.js}"></script>       
+   </body>
+ </html>

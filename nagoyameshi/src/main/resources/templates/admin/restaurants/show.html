@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<head>
+		 <div th:replace="~{fragment :: meta}"></div> 
+		<div th:replace="~{fragment :: styles}"></div>
+		
+	 	<title>料理店詳細</title>
+	 </head>
+	 
+	 <body>
+		 <div class = "nagoyameshi-wrapper">
+			 <!-- ヘッダー -->
+			 <header>
+			 <div th:replace="~{fragment :: header}"></div>
+             </header>
+             
+             <main>
+				 <div class="content-main pt-4 pb-5">
+					 <div class="row justify-content-center">
+						 <div class="col-xxl-9 col-xl-10 col-lg-11">
+							 <h1 class="mb-4 text-center" th:text="${restaurant.getName()}"></h1>
+							 <div class="d-flex justify-content-end align-items-end mb-3">                    
+                                 <div>
+                                     <a th:href="@{/admin/restaurants/__${restaurant.getId()}__/edit}">編集</a>                                    
+                                 </div>
+                             </div>
+                             
+                             <div class="mb-3">
+                                 <img th:if="${restaurant.getImageName()}" th:src="@{/storage/__${restaurant.getImageName()}__}" class="w-50 mx-auto d-block" alt="料理店画像">
+                                 <img th:unless="${restaurant.getImageName()}" th:src="@{/storage/gourmet.png}" class="w-100" alt="NO IMAGE">
+                             </div>  
+                             
+                             <div class="container mb-4 w-75">
+								 <div class="row pb-2 mb-2 border-bottom">
+                                     <div class="col-4">
+                                         <span class="fw-bold">ID</span>          
+                                     </div>                                                         
+                                     <div class="col">
+                                         <span th:text="${restaurant.getId()}"></span>
+                                     </div>
+                                 </div>
+                                 
+                                 <div class="row pb-2 mb-2 border-bottom">
+                                     <div class="col-4">
+                                         <span class="fw-bold">店名</span>
+                                     </div>           
+                                     <div class="col">
+                                         <span th:text="${restaurant.getName()}"></span>
+                                     </div>
+                                 </div> 
+                                 
+                                 <div class="row pb-2 mb-2 border-bottom">
+                                     <div class="col-4">
+                                         <span class="fw-bold">カテゴリー</span>
+                                     </div>           
+                                     <div class="col">
+                                         <span th:text="${restaurant.getCategoriesName()}"></span>
+                                     </div>
+                                 </div> 
+                                 
+                                 <div class="row pb-2 mb-2 border-bottom">
+                                     <div class="col-4">
+                                         <span class="fw-bold">説明</span>
+                                     </div>            
+                                     <div class="col">
+                                         <span class="nagoyameshi-pre-wrap" th:text="${restaurant.getDescription()}"></span>
+                                     </div>
+                                 </div>
+                                 
+                                 <div class="row pb-2 mb-2 border-bottom">
+                                     <div class="col-4">
+                                         <span class="fw-bold">価格帯</span>
+                                     </div>           
+                                     <div class="col">
+                                         <span th:text="|¥${restaurant.getMinPrice()} ~ ¥${restaurant.getMaxPrice()}|"></span>
+                                     </div>
+                                 </div> 
+                                 
+                                 <div class="row pb-2 mb-2 border-bottom">
+                                     <div class="col-4">
+                                         <span class="fw-bold">営業時間</span>
+                                     </div>           
+                                     <div class="col">
+                                         <span th:text="|${restaurant.getOpen()} ~ ${restaurant.getClose()}|"></span>
+                                     </div>
+                                 </div>
+                                 
+                                 <div class="row pb-2 mb-2 border-bottom">
+                                     <div class="col-4">
+                                         <span class="fw-bold">定休日</span>
+                                     </div>            
+                                     <div class="col">
+                                         <span class="nagoyameshi-pre-wrap" th:text="${restaurant.getClosedDay()}"></span>
+                                     </div>
+                                 </div>
+                                 
+                                 <div class="row pb-2 mb-2 border-bottom">
+                                     <div class="col-4">
+                                         <span class="fw-bold">郵便番号</span>
+                                     </div>            
+                                     <div class="col">
+                                         <span class="nagoyameshi-pre-wrap" th:text="${restaurant.getPostalCode()}"></span>
+                                     </div>
+                                 </div>
+                                 
+                                 <div class="row pb-2 mb-2 border-bottom">
+                                     <div class="col-4">
+                                         <span class="fw-bold">住所</span>
+                                     </div>            
+                                     <div class="col">
+                                         <span class="nagoyameshi-pre-wrap" th:text="${restaurant.getAddress()}"></span>
+                                     </div>
+                                 </div>
+                                 
+                                 <div class="row pb-2 mb-2 border-bottom">
+                                     <div class="col-4">
+                                         <span class="fw-bold">電話番号</span>
+                                     </div>            
+                                     <div class="col">
+                                         <span class="nagoyameshi-pre-wrap" th:text="${restaurant.getPhoneNumber()}"></span>
+                                     </div>
+                                 </div>
+                                                                
+                             </div>
+							 
+						 </div>
+					 </div>
+				 </div>
+			 </main>
+			 <!-- フッター -->
+             <div th:replace="~{fragment :: footer}"></div>
+		 </div>
+		 <!-- Bootstrap -->
+         <div th:replace="~{fragment :: scripts}"></div>         
+	 </body>
+</html>

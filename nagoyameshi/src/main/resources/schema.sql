@@ -1,0 +1,80 @@
+-- DROP TABLE IF EXISTS users;
+-- DROP TABLE IF EXISTS roles;
+
+CREATE TABLE IF NOT EXISTS roles (
+     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+     name VARCHAR(50) NOT NULL
+ );
+ 
+ CREATE TABLE IF NOT EXISTS users (
+     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+     name VARCHAR(50) NOT NULL,
+     furigana VARCHAR(50) NOT NULL,
+     postal_code VARCHAR(50) NOT NULL,
+     address VARCHAR(255) NOT NULL,
+     phone_number VARCHAR(50) NOT NULL,
+     email VARCHAR(255) NOT NULL UNIQUE,
+     password VARCHAR(255) NOT NULL,    
+     role_id INT NOT NULL, 
+     enabled BOOLEAN NOT NULL,
+     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,    
+     FOREIGN KEY (role_id) REFERENCES roles (id)
+ );
+ 
+ CREATE TABLE IF NOT EXISTS verification_tokens (
+     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+     user_id INT NOT NULL UNIQUE,
+     token VARCHAR(255) NOT NULL,        
+     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+     FOREIGN KEY (user_id) REFERENCES users (id) 
+ );
+ 
+ CREATE TABLE IF NOT EXISTS restaurants (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    image_name VARCHAR(255),
+    description TEXT NOT NULL,
+    min_price INT NOT NULL,
+    max_price INT NOT NULL,
+    open VARCHAR(15) NOT NULL,
+    close VARCHAR(15) NOT NULL,
+    closed_day VARCHAR(15) NOT NULL,
+    postal_code CHAR(8) NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    phone_number VARCHAR(15) NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_postal_code (postal_code),
+    INDEX idx_phone_number (phone_number)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS reservations(
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    check_date DATE NOT NULL,
+    start_time VARCHAR(15) NOT NULL,
+    finish_time VARCHAR(15) NOT NULL,
+    people INT NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    user_id INT NOT NULL,
+    restaurant_id INT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (restaurant_id) REFERENCES restaurants(id)
+);
+ 
+ CREATE TABLE IF NOT EXISTS categories (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL UNIQUE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+ 
+ CREATE TABLE IF NOT EXISTS restaurant_categories (
+    restaurant_id INT NOT NULL,
+    category_id INT NOT NULL,
+    PRIMARY KEY (restaurant_id, category_id),
+    CONSTRAINT fk_restaurant
+        FOREIGN KEY (restaurant_id) REFERENCES restaurants(id) ON DELETE CASCADE,
+    CONSTRAINT fk_category
+        FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

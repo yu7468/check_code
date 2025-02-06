@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Checkout</title>
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+    <script th:inline="javascript">
+        var sessionId = /*[[${sessionId}]]*/ null;
+        var stripe = Stripe('pk_test_51PZUJXRxbCwL8rrlcU20lyEF30Scgg8aSDBk5GPRzuWEgwxBor9btkjbGiooWrBck4Ct1alxTjYYQYunvPhvazdK00junYLkkJ'); 
+        
+        stripe.redirectToCheckout({ sessionId: sessionId })
+            .then(function(result) {
+                if (result.error) {
+                    alert(result.error.message);
+                }
+            });
+    </script>
+</body>
+</html>

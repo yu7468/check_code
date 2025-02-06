@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <div th:replace="~{fragment :: meta}"></div>
+    <div th:replace="~{fragment :: styles}"></div>
+    <!-- 引入 flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <title>予約ページ</title>
+</head>
+<body>
+    <div class="nagoyameshi-wrapper">
+        <!-- ヘッダー -->
+        <div th:replace="~{fragment :: header}"></div>
+
+        <main>
+            <div class="container pt-4 pb-5 nagoyameshi-container">
+                <div class="row justify-content-center">
+                    <div class="col-xxl-9 col-xl-10 col-lg-11">
+
+                        <h1 class="mb-3 text-center" th:text="${restaurant.name} + 'の予約'"></h1>
+                        <form th:action="@{/vip/reservations/{restaurantId}/submit(restaurantId=${restaurant.id})}" method="post" th:object="${reservationInputForm}">
+                            <label>利用日:</label>
+                            <input type="text" id="checkDate" name="checkDate" th:field="*{checkDate}" required>
+
+                            <label>時間帯:</label>
+                            <select id="startTimeSlot" name="startTime" th:field="*{startTime}" disabled>
+                                <option value="">開始時間を選択してください</option>
+                            </select>
+                            <select id="finishTimeSlot" name="finishTime" th:field="*{finishTime}" disabled>
+                                <option value="">終了時間を選択してください</option>
+                            </select>
+
+                            <label>人数:</label>
+                            <input type="number" name="people" th:field="*{people}" min="1" required>
+
+                            <button type="submit" class="btn nagoyameshi-btn">予約する</button>
+                        </form>
+
+                        <input type="hidden" id="restaurantId" th:value="${restaurant.id}">
+                        <input type="hidden" id="closedDays" th:value="${closedDays}">
+
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- フッター -->
+        <div th:replace="~{fragment :: footer}"></div>
+    </div>
+    <!-- 引入 flatpickr JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const closedDaysShort = document.getElementById('closedDays').value.split(',');
+
+            const dayMapping = {
+                "月": 1,
+                "火": 2,
+                "水": 3,
+                "木": 4,
+                "金": 5,
+                "土": 6,
+                "日": 0
+            };
+
+            const disabledDays = closedDaysShort.map(day => dayMapping[day]).filter(day => !isNaN(day));
+            console.log('Disabled days:', disabledDays); // 打印禁用的星期数组
+
+            const checkDateInput = document.getElementById('checkDate');
+
+            flatpickr(checkDateInput, {
+                disable: [
+                    function(date) {
+                        return disabledDays.includes(date.getDay());
+                    }
+                ],
+                dateFormat: "Y-m-d",
+                locale: "ja",
+                onChange: function(selectedDates, dateStr, instance) {
+                    if (!dateStr) {
+                        alert('日付を選択してください');
+                        return;
+                    }
+
+                    const selectedDate = new Date(dateStr);
+                    if (isNaN(selectedDate.getTime())) {  // 日付が不正な場合
+                        alert('無効な日付が選択されました');
+                        return;
+                    }
+
+                    const dayOfWeek = selectedDate.toLocaleDateString('ja-JP', { weekday: 'long' });
+
+                    const dayMappingReverse = {
+                        1: "月曜日",
+                        2: "火曜日",
+                        3: "水曜日",
+                        4: "木曜日",
+                        5: "金曜日",
+                        6: "土曜日",
+                        0: "日曜日"
+                    };
+
+                    if (disabledDays.includes(selectedDate.getDay())) {
+                        alert('選択された日はこのレストランの定休日です');
+                        instance.clear();  // 日付をクリアして選択をリセット
+                    }
+                }
+            });
+
+            document.getElementById('checkDate').addEventListener('change', async function() {
+                const checkDate = this.value;
+                const restaurantId = document.getElementById('restaurantId').value;
+                const startTimeSelect = document.getElementById('startTimeSlot');
+                const finishTimeSelect = document.getElementById('finishTimeSlot');
+
+                startTimeSelect.innerHTML = '<option>開始時間を選択してください</option>';
+                finishTimeSelect.innerHTML = '<option>終了時間を選択してください</option>';
+                startTimeSelect.disabled = false;
+                finishTimeSelect.disabled = false;
+
+                if (!checkDate || !restaurantId) {
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`/vip/reservations/${restaurantId}/time-slots?checkDate=${checkDate}`);
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        // Start time slots
+                        data.startTimeSlots.forEach(slot => {
+                            startTimeSelect.innerHTML += `<option value="${slot}">${slot}</option>`;
+                        });
+                        // Finish time slots
+                        data.finishTimeSlots.forEach(slot => {
+                            finishTimeSelect.innerHTML += `<option value="${slot}">${slot}</option>`;
+                        });
+                    } else {
+                        console.error("Error:", data.error);
+                    }
+                } catch (error) {
+                    console.error('Error fetching time slots:', error);
+                }
+            });
+        });
+    </script>
+    <div th:replace="~{fragment :: scripts}"></div>
+</body>
+</html>
