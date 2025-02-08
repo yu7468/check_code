@@ -17,7 +17,24 @@
              <main>
                  <div class="container pt-4 pb-5 nagoyameshi-container">
                      <div class="row justify-content-center">
-                         <div class="col-xxl-9 col-xl-10 col-lg-11">                          
+                         <div class="col-xxl-9 col-xl-10 col-lg-11">   
+							<div th:if="${successMessage}" class="alert alert-info">
+								<span th:text="${successMessage}"></span>
+							</div> 
+							<div sec:authorize="hasAuthority('ROLE_VIP')" class="d-flex justify-content-end">
+							    <!-- お気に入りの追加/解除フォーム -->
+							    <form method="post" th:action="${isFavorite} ? @{/vip/favorites/remove} : @{/vip/favorites/add}">
+							        <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+							        <input type="hidden" name="restaurantId" th:value="${restaurant.id}" />
+							        
+							        <button type="submit" 
+									    th:class="${isFavorite} ? 'btn btn-danger' : 'btn btn-outline-danger'">
+									    <i class="fa fa-heart" th:text="${isFavorite} ? '&#9829;' : '&#9825;'"></i>
+									    <span th:text="${isFavorite} ? 'お気に入り解除' : 'お気に入り追加'"></span>
+									</button>
+
+							    </form>
+							</div>
                              
                              <h1 class="mb-4 text-center" th:text="${restaurant.getName()}"></h1>                                                           
                              
@@ -122,7 +139,15 @@
 									            <a th:href="@{/vip/reservations/{restaurantId}/input(restaurantId=${restaurant.id})}"
 									               class="btn text-black shadow-sm w-100 nagoyameshi-btn">予約する</a>                                                                             
 									        </div>
-									    </div>  
+									    </div>
+									    
+									    <div class="card">
+									        <div class="card-body">       
+									            <a th:href="@{/vip/reviews/{restaurantId}/index(restaurantId=${restaurant.id})}"
+									               class="btn text-black shadow-sm w-100 nagoyameshi-btn">レビューページ</a>                                                                             
+									        </div>
+									    </div>									    
+									      
 									</div>
 									
 									<!-- 未登录用户 -->

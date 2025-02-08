@@ -68,8 +68,11 @@ public class ReservationController {
     ) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
             .orElseThrow(() -> new RuntimeException("Restaurant not found"));
-        
+        String closedDays = restaurant.getClosedDay();
+        System.out.println("Closed Days from DB: " + closedDays);
+
         model.addAttribute("restaurant", restaurant);
+        model.addAttribute("closedDays", String.join(",", closedDays));
         model.addAttribute("reservationInputForm", reservationInputForm == null ? new ReservationInputForm() : reservationInputForm);
         
         return "vip/reservations/input";

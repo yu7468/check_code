@@ -1,9 +1,12 @@
 package com.example.nagoyameshi.controller;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.web.bind.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,17 +15,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.nagoyameshi.entity.Restaurant;
+import com.example.nagoyameshi.entity.Review;
+import com.example.nagoyameshi.entity.User;
 import com.example.nagoyameshi.repository.RestaurantRepository;
+import com.example.nagoyameshi.repository.ReviewRepository;
+import com.example.nagoyameshi.security.UserDetailsImpl;
+import com.example.nagoyameshi.service.FavoriteService;
 
 @Controller
 @RequestMapping("/restaurants")
 
 public class RestaurantController {
 	private RestaurantRepository restaurantRepository;
+	private final ReviewRepository reviewRepository;
+	private final FavoriteService favoriteService;
 	
-	public RestaurantController(RestaurantRepository restaurantRepository) {
+	public RestaurantController(RestaurantRepository restaurantRepository, FavoriteService favoriteService, ReviewRepository reviewRepository) {
 		this.restaurantRepository = restaurantRepository;
-	}
+		this.favoriteService = favoriteService;	
+		this.reviewRepository = reviewRepository;
+		}
 	
 	@GetMapping
 	public String index(
@@ -87,10 +99,22 @@ public class RestaurantController {
 	
 	
 	@GetMapping("/{id}")
-    public String show(@PathVariable(name = "id") Integer id, Model model) {
+    public String show(@PathVariable(name = "id") Integer id, 
+    		@AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
+    		Model model) {
         Restaurant restaurant = restaurantRepository.getReferenceById(id);
+        List<Review> reviews = reviewRepository.findByRestaurant(restaurant);
+        List<Review> limitedReviews = reviews.size() > 6 ? reviews.subList(0, 6) : reviews;
         
-        model.addAttribute("restaurant", restaurant);     
+        boolean isFavorite = false;
+        if (userDetailsImpl != null) {
+            User user = userDetailsImpl.getUser();
+            isFavorite = favoriteService.isFavorite(user, restaurant);
+        }
+        
+        model.addAttribute("restaurant", restaurant);  
+        model.addAttribute("reviews", limitedReviews);
+        model.addAttribute("isFavorite", isFavorite);
         
         return "restaurants/show";
     } 

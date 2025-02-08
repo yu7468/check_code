@@ -51,7 +51,7 @@
                                  </a>
          
                                  <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownGeneral">
-									 <a class="dropdown-item samuraitravel-dropdown-item" th:href="@{/general/user}">会員情報</a>  
+									 <a class="dropdown-item nagoyameshi-dropdown-item" th:href="@{/general/user}">会員情報</a>  
                                      <div class="dropdown-divider"></div>                                                                  
                                      <a class="dropdown-item nagoyameshi-dropdown-item" th:href="@{/logout}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                          ログアウト
@@ -67,8 +67,9 @@
 							    </a>
 							
 							    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownGeneral">
-							        <a class="dropdown-item samuraitravel-dropdown-item" th:href="@{/general/user}">会員情報</a>
-							        <a class="dropdown-item samuraitravel-dropdown-item" th:href="@{/vip/reservations/index}">予約一覧</a>
+							        <a class="dropdown-item nagoyameshi-dropdown-item" th:href="@{/general/user}">会員情報</a>
+							        <a class="dropdown-item nagoyameshi-dropdown-item" th:href="@{/vip/reservations/index}">予約一覧</a>
+							        <a class="dropdown-item nagoyameshi-dropsown-item" th:href="@{/vip/favorites/index}">お気に入り一覧</a>
 							        <div class="dropdown-divider"></div>
 							        <a class="dropdown-item nagoyameshi-dropdown-item" th:href="@{/logout}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
 							            ログアウト
@@ -85,7 +86,7 @@
          
                                  <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownAdmin">                                                                                            
                                      <a class="dropdown-item nagoyameshi-dropdown-item" th:href="@{/admin/restaurants}">料理店一覧</a>
-                                     <a class="dropdown-item samuraitravel-dropdown-item" th:href="@{/admin/users}">会員一覧</a>                                                                                                     
+                                     <a class="dropdown-item nagoyameshi-dropdown-item" th:href="@{/admin/users}">会員一覧</a>                                                                                                     
                                                                
                                      <div class="dropdown-divider"></div>
                                      

@@ -5,6 +5,8 @@
     <div th:replace="~{fragment :: styles}"></div>
     <!-- 引入 flatpickr CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    
+
     <title>予約ページ</title>
 </head>
 <body>
@@ -18,23 +20,25 @@
                     <div class="col-xxl-9 col-xl-10 col-lg-11">
 
                         <h1 class="mb-3 text-center" th:text="${restaurant.name} + 'の予約'"></h1>
-                        <form th:action="@{/vip/reservations/{restaurantId}/submit(restaurantId=${restaurant.id})}" method="post" th:object="${reservationInputForm}">
-                            <label>利用日:</label>
-                            <input type="text" id="checkDate" name="checkDate" th:field="*{checkDate}" required>
-
-                            <label>時間帯:</label>
-                            <select id="startTimeSlot" name="startTime" th:field="*{startTime}" disabled>
-                                <option value="">開始時間を選択してください</option>
-                            </select>
-                            <select id="finishTimeSlot" name="finishTime" th:field="*{finishTime}" disabled>
-                                <option value="">終了時間を選択してください</option>
-                            </select>
-
-                            <label>人数:</label>
-                            <input type="number" name="people" th:field="*{people}" min="1" required>
-
-                            <button type="submit" class="btn nagoyameshi-btn">予約する</button>
-                        </form>
+						    <div class="form-container">
+						        <form th:action="@{/vip/reservations/{restaurantId}/submit(restaurantId=${restaurant.id})}" method="post" th:object="${reservationInputForm}" class="form-vertical">
+						            <label>利用日:</label>
+						            <input type="date" id="checkDate" name="checkDate" th:field="*{checkDate}" required>
+						
+						            <label>時間帯:</label>
+						            <select id="startTimeSlot" name="startTime" th:field="*{startTime}" disabled>
+						                <option value="">開始時間を選択してください</option>
+						            </select>
+						            <select id="finishTimeSlot" name="finishTime" th:field="*{finishTime}" disabled>
+						                <option value="">終了時間を選択してください</option>
+						            </select>
+						
+						            <label>人数:</label>
+						            <input type="number" name="people" th:field="*{people}" min="1" required>
+						
+						            <button type="submit" class="btn nagoyameshi-btn">予約する</button>
+						        </form>
+						    </div>
 
                         <input type="hidden" id="restaurantId" th:value="${restaurant.id}">
                         <input type="hidden" id="closedDays" th:value="${closedDays}">
@@ -42,16 +46,16 @@
                     </div>
                 </div>
             </div>
-        </main>
-
-        <!-- フッター -->
-        <div th:replace="~{fragment :: footer}"></div>
+        </main>       
     </div>
     <!-- 引入 flatpickr JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <!-- 最新版を使用 -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/l10n/ja.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const closedDaysShort = document.getElementById('closedDays').value.split(',');
+            
 
             const dayMapping = {
                 "月": 1,
@@ -144,6 +148,8 @@
             });
         });
     </script>
+    <!-- フッター -->
+        <div th:replace="~{fragment :: footer}"></div>
     <div th:replace="~{fragment :: scripts}"></div>
 </body>
 </html>
