@@ -51,7 +51,7 @@ public class ReviewService {
 	
 	@Transactional
     public void delete(Integer id) {
-        reviewRepository.deleteById(id);
+		reviewRepository.deleteById(id);
     }
 	
 	public boolean hasUserReviewedRestaurant(Integer restaurantId, Integer userId) {

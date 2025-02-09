@@ -27,6 +27,10 @@
 		              </div>
 		              <h1 class="mb-4 text-center" th:text="${restaurant.getName()} + 'のレビュー一覧'"></h1>   
 		              
+		              <div th:if="${errorMessage}" class="alert alert-danger">
+                                 <span th:text="${errorMessage}"></span>
+                             </div>    
+		              
 		           <div class="reviews-page">
                     <div class="row">
 						<div class="text-center">
@@ -35,7 +39,7 @@
 							</div>
 						</div>
 						<!-- 投稿ボタン -->
-						<input type="hidden" id="restaurantId" th:value="${restaurant.id}">
+						
 					<div class="text-center my-4">
 					    <a th:href="@{/vip/reviews/post/{restaurantId}(restaurantId=${restaurant.id})}" class="btn text-black shadow-sm nagoyameshi-btn">レビューを投稿する</a>
 					</div>

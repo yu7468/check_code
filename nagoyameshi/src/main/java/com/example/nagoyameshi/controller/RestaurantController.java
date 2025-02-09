@@ -104,7 +104,6 @@ public class RestaurantController {
     		Model model) {
         Restaurant restaurant = restaurantRepository.getReferenceById(id);
         List<Review> reviews = reviewRepository.findByRestaurant(restaurant);
-        List<Review> limitedReviews = reviews.size() > 6 ? reviews.subList(0, 6) : reviews;
         
         boolean isFavorite = false;
         if (userDetailsImpl != null) {
@@ -113,7 +112,7 @@ public class RestaurantController {
         }
         
         model.addAttribute("restaurant", restaurant);  
-        model.addAttribute("reviews", limitedReviews);
+        model.addAttribute("reviews", reviews);
         model.addAttribute("isFavorite", isFavorite);
         
         return "restaurants/show";

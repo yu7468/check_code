@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.nagoyameshi.entity.Restaurant;
@@ -67,29 +66,35 @@ public class ReviewController {
         model.addAttribute("reviewPostForm", reviewPostForm);
         model.addAttribute("restaurant", restaurant);
         model.addAttribute("user", user);
-        return "vip/reviews/post"; // 确保 Thymeleaf 能找到对应的模板
+        return "vip/reviews/post"; 
     }
 
 
-    @PostMapping("/{restaurantsId}/create")
-    public String create(@ModelAttribute @Validated ReviewPostForm reviewPostForm, BindingResult bindingResult, @RequestParam Integer restaurantId, @RequestParam Integer userId, RedirectAttributes redirectAttributes) {
+    @PostMapping("/{restaurantId}/create")
+    public String create(@PathVariable Integer restaurantId,
+                         @AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
+                         @ModelAttribute @Validated ReviewPostForm reviewPostForm, 
+                         BindingResult bindingResult, 
+                         RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             return "vip/reviews/post"; 
         }
+
+        User user = userDetailsImpl.getUser();
         Restaurant restaurant = restaurantRepository.getReferenceById(restaurantId);
-        User user = userRepository.getReferenceById(userId);
-        
-        boolean hasReviewed = reviewService.hasUserReviewedRestaurant(restaurantId, userId);
-        if (hasReviewed) {
+
+        if (reviewService.hasUserReviewedRestaurant(restaurantId, user.getId())) {
             redirectAttributes.addFlashAttribute("errorMessage", "すでにこの宿にレビューを投稿しています。");
-            return "redirect:/restaurants/" + restaurantId;
+            return "redirect:/vip/reviews/" + restaurantId + "/index";
         }
 
         reviewService.create(reviewPostForm, restaurant, user);
-        redirectAttributes.addFlashAttribute("successMessage", "レビューが投稿しました。");
+        redirectAttributes.addFlashAttribute("successMessage", "レビューが投稿されました。");
 
-        return "redirect:/restaurants/" + restaurantId;
+        return "redirect:/vip/reviews/" + restaurantId + "/index";  // 这里修改跳转路径
     }
+
+
 
     @GetMapping("/{restaurantId}/index")
     public String index(@PathVariable(name = "restaurantId") int restaurantId, Model model, @PageableDefault(page = 0, size = 10, sort = "restaurantId", direction = Direction.ASC)Pageable pageable) {
@@ -135,7 +140,7 @@ public class ReviewController {
         Review review = reviewRepository.getReferenceById(id); // 获取评论对象
         Integer restaurantId = review.getRestaurant().getId(); // 获取餐厅 ID
         
-        reviewRepository.deleteById(id);    
+        reviewService.delete(id);
         redirectAttributes.addFlashAttribute("successMessage", "レビューを削除しました。");
         
         return "redirect:/vip/reviews/" + restaurantId + "/index"; // 使用餐厅 ID 跳转到评论列表页

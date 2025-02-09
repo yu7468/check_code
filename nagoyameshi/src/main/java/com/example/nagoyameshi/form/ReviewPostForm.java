@@ -11,10 +11,10 @@ import lombok.Data;
 
 public class ReviewPostForm {
 	
-    private Integer houseId;
+    private Integer restaurantId;
     private Integer userId;
 	
-	@NotNull(message = "")
+	@NotNull(message = "評価を選択してください。")
     private Integer rankStar;
  
     @NotBlank(message = "レビュー内容を入れてください。")

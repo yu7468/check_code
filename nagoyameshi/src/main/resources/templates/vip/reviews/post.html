@@ -23,9 +23,7 @@
 							<span th:text="${errorMessage}"></span>
 						</div>
 						<h1 class="mb-4 text-center" th:text="${restaurant.getName()} + 'のレビュー投稿'"></h1>
-						<form method="post"  th:action="@{/vip/reviews/create}" th:object="${reviewPostForm}">
-							<input type="hidden" th:field="*{restaurantId}" />
-							<input type="hidden" th:field="*{userId}" />
+						<form method="post"  th:action="@{/vip/reviews/{restaurantId}/create(restaurantId=${reviewPostForm.restaurantId})}" th:object="${reviewPostForm}">
 
                                  <div class="form-group row mb-3 align-items-center">
                                      <div class="col-md-5 align-items-center">
