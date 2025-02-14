@@ -25,20 +25,28 @@ public class AdminUserController {
     }    
     
     @GetMapping
-    public String index(@RequestParam(name = "keyword", required = false) String keyword, @PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable, Model model) {
+    public String index(@RequestParam(name = "keyword", required = false) String keyword, 
+                        @RequestParam(name = "emailKeyword", required = false) String emailKeyword,  
+                        @PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable, 
+                        Model model) {
         Page<User> userPage;
-        
-        if (keyword != null && !keyword.isEmpty()) {
-            userPage = userRepository.findByNameLikeOrFuriganaLike("%" + keyword + "%", "%" + keyword + "%", pageable);                   
+
+        if (emailKeyword != null && !emailKeyword.isEmpty()) {
+            userPage = userRepository.findByEmailLike("%" + emailKeyword + "%", pageable);
+        }
+        else if (keyword != null && !keyword.isEmpty()) {
+            userPage = userRepository.findByNameLikeOrFuriganaLike("%" + keyword + "%", "%" + keyword + "%", pageable);
         } else {
             userPage = userRepository.findAll(pageable);
-        }        
+        }
         
         model.addAttribute("userPage", userPage);        
-        model.addAttribute("keyword", keyword);                
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("emailKeyword", emailKeyword);  
         
         return "admin/users/index";
     }
+
     
     @GetMapping("/{id}")
     public String show(@PathVariable(name = "id") Integer id, Model model) {

@@ -69,13 +69,7 @@ public class AuthController {
         return "redirect:/";
     }
 	
-//	@GetMapping("/vipSignup")
-//	public String vipSignup(Model model) {        
-//        model.addAttribute("vipSignupForm", new vipSignupForm());
-//        return "auth/vipSignup";
-//    }
-	
-	
+		
 	@GetMapping("/signup/verify")
     public String verify(@RequestParam(name = "token") String token, Model model) {
         VerificationToken verificationToken = verificationTokenService.getVerificationToken(token);
