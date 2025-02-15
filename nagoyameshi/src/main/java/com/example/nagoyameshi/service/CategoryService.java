@@ -36,13 +36,5 @@ public class CategoryService {
         categoryRepository.save(category);
     }
 	
-//	@Transactional
-//    public void delete(Integer id) {
-//		categoryRepository.deleteById(id);
-//    }
-//	
-//	public boolean hasUsercategoryedRestaurant(Integer restaurantId, Integer userId) {
-//	    return categoryRepository.existsByRestaurantIdAndUserId(restaurantId, userId);
-//	}
 
 }

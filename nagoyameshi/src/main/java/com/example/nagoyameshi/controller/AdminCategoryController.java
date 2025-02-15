@@ -90,6 +90,15 @@ public class AdminCategoryController {
 		 return "redirect:/";
 	 }
 	 
+	 @PostMapping("/delete/{id}")
+	 public String delete(@PathVariable(name = "id") Integer id, RedirectAttributes redirectAttributes) {
+		 categoryRepository.deleteById(id);
+         
+	        redirectAttributes.addFlashAttribute("successMessage", "カテゴリーを削除しました。");
+	        
+	        return "redirect:/admin/categories";
+	 }
+	 
 	
 
 }

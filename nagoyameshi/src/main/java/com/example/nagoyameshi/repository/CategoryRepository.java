@@ -10,5 +10,6 @@ import com.example.nagoyameshi.entity.Category;
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
     Category findByName(String name);
     Page<Category> findByNameContaining(String keyword, Pageable pageable); 
+    
 }
 
