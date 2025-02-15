@@ -4,6 +4,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.nagoyameshi.entity.PasswordResetToken;
 import com.example.nagoyameshi.entity.Role;
 import com.example.nagoyameshi.entity.User;
 import com.example.nagoyameshi.form.SignupForm;
@@ -79,5 +80,17 @@ public class UserService {
         User currentUser = userRepository.getReferenceById(userEditForm.getId());
         return !userEditForm.getEmail().equals(currentUser.getEmail());      
     } 
+    
+    public void createPasswordResetTokenForUser(User user, String token) {
+        PasswordResetToken myToken = new PasswordResetToken(token, user);
+        passwordResetTokenRepository.save(myToken);
+    }
+
+    public void changeUserPassword(User user, String password) {
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
+    }
+    
+
 
 }

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <div th:replace="~{fragment :: meta}"></div>   
+    <div th:replace="~{fragment :: styles}"></div> 
+    <title>パスワードリセット</title>       
+</head>
+<body>
+    <div class="nagoyameshi-wrapper">
+        <!-- ヘッダー -->
+        <div th:replace="~{fragment :: header}"></div>
+        
+        <main>
+            <div class="content-main pt-4 pb-5">
+                <div class="row justify-content-center">        
+                    <div class="col-xxl-9 col-xl-10 col-lg-11">                            
+                        <h1 class="mb-4 text-center">パスワードリセット</h1>
+                        
+                        <!-- 显示成功消息 -->
+                        <div th:if="${successMessage}" class="alert alert-success">
+                            <span th:text="${successMessage}"></span>
+                        </div>
+                        
+                        <!-- 显示错误消息 -->
+                        <div th:if="${errorMessage}" class="alert alert-danger">
+                            <span th:text="${errorMessage}"></span>
+                        </div>
+                        
+                        <form action="/resetPassword" method="post">
+						    <input type="email" name="email" placeholder="メールアドレスを入力してください" required>
+						    <button type="submit">パスワードリセット</button>
+						</form>
+						
+						<form action="/savePassword" method="post">
+						    <input type="hidden" name="token" value="${token}">
+						    <input type="password" name="password" placeholder="新パスワードを入力してください" required>
+						    <button type="submit">保存密码</button>
+						</form>
+                        
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <!-- フッター -->
+        <div th:replace="~{fragment :: footer}"></div>
+    </div>
+    
+    <div th:replace="~{fragment :: scripts}"></div>    
+</body>
+</html>
