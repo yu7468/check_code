@@ -54,23 +54,23 @@
                                          <td th:text="${category.getId()}"></td>
                                          <td th:text="${category.getName()}"></td>
                                          <td><a th:href="@{/admin/categories/edit/{id}(id=${category.getId()})}">編集</a></td> 
-                                         <td><a href="#" class="nagoyameshi-link-danger" data-bs-toggle="modal" th:data-bs-target="${'#deleteRestaurantModal' + category.getId()}">削除</a></td>  
+                                        <td><a href="#" class="nagoyameshi-link-danger" data-bs-toggle="modal" th:data-bs-target="${'#deleteCategoryModal' + category.getId()}">削除</a></td> 
                                           <!-- 削除用モーダル -->
-                                         <div class="modal fade" th:id="${'deleteRestaurantModal' + restaurant.getId()}" tabindex="-1" th:aria-labelledby="${'deleteRestaurantModalLabel' + restaurant.getId()}">
-                                             <div class="modal-dialog">
-                                                 <div class="modal-content">
-                                                     <div class="modal-header">
-                                                         <h5 class="modal-title" th:id="${'deleteRestaurantModalLabel' + restaurant.getId()}" th:text="${restaurant.getName() + 'を削除してもよろしいですか？'}"></h5>
-                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
-                                                     </div>
-                                                     <div class="modal-footer">
-                                                         <form method="post"th:action="@{/admin/categories/__${category.getId()}__/delete}">
-                                                             <button type="submit" class="btn nagoyameshi-btn-danger text-black shadow-sm">削除</button>
-                                                         </form>
-                                                     </div>
-                                                 </div>
-                                             </div>
-                                         </div>                                                                               
+                                         <div class="modal fade" th:id="${'deleteCategoryModal' + category.getId()}" tabindex="-1" th:aria-labelledby="${'deleteCategoryModalLabel' + category.getId()}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" th:id="${'deleteCategoryModalLabel' + category.getId()}" th:text="${category.getName() + 'を削除してもよろしいですか？'}"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+            </div>
+            <div class="modal-footer">
+                <form method="post" th:action="@{/admin/categories/delete/{id}(id=${category.getId()})}">
+                    <button type="submit" class="btn nagoyameshi-btn-danger text-black shadow-sm">削除</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>                                                                              
                                      </tr>                                      
                                  </tbody>
                              </table>                             
