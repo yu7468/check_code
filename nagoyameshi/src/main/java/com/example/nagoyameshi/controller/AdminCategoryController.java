@@ -72,10 +72,11 @@ public class AdminCategoryController {
 	 
 	 @GetMapping("/edit/{id}")
 	 public String edit(@PathVariable(name = "id") Integer id, Model model) {
-		 Category category = categoryRepository.getReferenceById(id);
-		 CategoryEditForm categoryEditForm = new CategoryEditForm(category.getName());
-		 
-		 model.addAttribute("categoryEditForm", categoryEditForm);
+	     Category category = categoryRepository.getReferenceById(id);
+	     CategoryEditForm categoryEditForm = new CategoryEditForm(category.getId(), category.getName());
+	     
+	     model.addAttribute("categoryEditForm", categoryEditForm);
+	     return "admin/categories/edit"; 
 	 }
 	 
 	 @PostMapping("/update")

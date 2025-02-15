@@ -11,7 +11,7 @@ public class CategoryEditForm {
 	@NotNull
     private Integer id;
 	
-	@NotBlank(message = "カテゴリーを入れてください。")
+	@NotBlank(message = "カテゴリーを入力してください。")
     private String name;
 
 }
