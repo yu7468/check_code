@@ -19,7 +19,7 @@ public class PasswordResetController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/resetPassword")
+    @GetMapping("/auth/reset")
     public String resetPassword(HttpServletRequest request, @RequestParam("email") String userEmail) {
         User user = userService.findUserByEmail(userEmail);
         if (user == null) {
@@ -35,7 +35,7 @@ public class PasswordResetController {
         return "redirect:/login?resetPassword";
     }
 
-    @GetMapping("/changePassword")
+    @PostMapping("/auth/reset")
     public String showChangePasswordPage(@RequestParam("token") String token, Model model) {
         PasswordResetToken passToken = userService.getPasswordResetToken(token);
         if (passToken == null || passToken.isExpired()) {
