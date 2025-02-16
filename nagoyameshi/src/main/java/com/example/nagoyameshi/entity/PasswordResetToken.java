@@ -2,6 +2,10 @@ package com.example.nagoyameshi.entity;
 
 import java.sql.Timestamp;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.annotation.Transient;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,20 +23,29 @@ import lombok.Data;
 public class PasswordResetToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Integer id;
 
-    @Column(name = "token")
+    @Column(name = "token", unique = true)
     private String token;
-    
+
     @OneToOne
     @JoinColumn(name = "user_id")
-    private User user;    
+    private User user;
 
-    @Column(name = "created_at", insertable = false, updatable = false)
+    @CreatedDate
     private Timestamp createdAt;
-    
-    @Column(name = "updated_at", insertable = false, updatable = false)
-    private Timestamp updatedAt;   
+
+    @LastModifiedDate
+    private Timestamp updatedAt;
+
+    @Transient
+    private boolean expired;
+
+    public PasswordResetToken(String token, User user) {
+        this.token = token;
+        this.user = user;
+        this.createdAt = new Timestamp(System.currentTimeMillis());
+        this.expired = false; // 或设置有效期
+    }
 
 }

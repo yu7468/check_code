@@ -6,4 +6,5 @@ import com.example.nagoyameshi.entity.PasswordResetToken;
 
 public interface PasswordResetTokenRepository extends JpaRepository<PasswordResetToken, Long> {
     PasswordResetToken findByToken(String token);
+  
 }

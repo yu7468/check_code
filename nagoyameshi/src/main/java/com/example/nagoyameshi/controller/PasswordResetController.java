@@ -1,4 +1,4 @@
-package com.example.nagoyameshi.controller;
+import java.util.UUID;  // 导入UUID
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.nagoyameshi.entity.PasswordResetToken;
 import com.example.nagoyameshi.entity.User;
+import com.example.nagoyameshi.service.EmailService;
 import com.example.nagoyameshi.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,11 +20,14 @@ public class PasswordResetController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private EmailService emailService;  // 注入emailService
+
     @GetMapping("/auth/reset")
     public String resetPassword(HttpServletRequest request, @RequestParam("email") String userEmail) {
         User user = userService.findUserByEmail(userEmail);
         if (user == null) {
-            // 处理用户不存在的情况
+            return "redirect:/login?error=User not found!";
         }
 
         String token = UUID.randomUUID().toString();
@@ -40,6 +44,7 @@ public class PasswordResetController {
         PasswordResetToken passToken = userService.getPasswordResetToken(token);
         if (passToken == null || passToken.isExpired()) {
             // 处理无效令牌
+            return "redirect:/login?error=invalidToken";
         }
 
         model.addAttribute("token", token);
@@ -51,6 +56,7 @@ public class PasswordResetController {
         PasswordResetToken passToken = userService.getPasswordResetToken(token);
         if (passToken == null || passToken.isExpired()) {
             // 处理无效令牌
+            return "redirect:/login?error=invalidToken";
         }
 
         User user = passToken.getUser();
