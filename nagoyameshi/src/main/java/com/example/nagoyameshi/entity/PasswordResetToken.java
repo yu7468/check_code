@@ -19,7 +19,6 @@ import lombok.Data;
 @Entity
 @Data
 @Table(name = "reset_tokens")
-
 public class PasswordResetToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,6 +31,9 @@ public class PasswordResetToken {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(name = "email")
+    private String email;
+
     @CreatedDate
     private Timestamp createdAt;
 
@@ -41,17 +43,5 @@ public class PasswordResetToken {
     @Transient
     private boolean expired;
 
-    public PasswordResetToken(String token, User user) {
-        this.token = token;
-        this.user = user;
-        this.createdAt = new Timestamp(System.currentTimeMillis());
-        this.expired = false; // 或设置有效期
-    }
-    
-    public boolean isExpired() {
-        // 24小时有效期
-        long tokenAge = System.currentTimeMillis() - createdAt.getTime();
-        return tokenAge > 24 * 60 * 60 * 1000;
-    }
-
 }
+

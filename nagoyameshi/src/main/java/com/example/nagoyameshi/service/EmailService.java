@@ -21,7 +21,6 @@ public class EmailService {
         message.setTo(to);
         message.setSubject(subject);
         message.setText(text);
-        message.setHtml(true);
         emailSender.send(message);
     }
 
@@ -32,7 +31,6 @@ public class EmailService {
         message.setSubject(subject);
         message.setText(htmlText);
         message.setFrom(env.getProperty("spring.mail.username"));
-        message.setHtml(true); 
         emailSender.send(message);
     }
 }

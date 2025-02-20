@@ -89,7 +89,7 @@ public class UserService {
         // 删除旧令牌
         passwordResetTokenRepository.deleteByUser(user);
         
-        PasswordResetToken passToken = new PasswordResetToken(token, user);
+        PasswordResetToken passToken = new PasswordResetToken();
         passwordResetTokenRepository.save(passToken);
     }
 

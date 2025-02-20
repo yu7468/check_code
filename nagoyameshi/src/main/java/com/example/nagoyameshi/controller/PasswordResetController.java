@@ -30,6 +30,12 @@ public class PasswordResetController {
     private EmailService emailService;  
 
     @GetMapping("/auth/reset")
+    public String showResetPasswordForm() {
+        // 返回重置密码的表单页面
+        return "passwordResetForm"; // 确保页面名称正确
+    }
+
+    @PostMapping("/auth/reset")
     public String resetPassword(HttpServletRequest request, @RequestParam("email") String userEmail) {
         User user = userService.findUserByEmail(userEmail);
         if (user == null) {
@@ -44,8 +50,11 @@ public class PasswordResetController {
 
         return "redirect:/login?resetPassword";
     }
+    
 
-    @GetMapping("/changePassword") // 改为处理GET请求
+    
+
+    @GetMapping("/auth/changePassword") // 改为处理GET请求
     public String showChangePasswordPage(@RequestParam("token") String token, Model model) {
         PasswordResetToken passToken = userService.getPasswordResetToken(token);
         if (passToken == null || passToken.isExpired()) {
@@ -56,7 +65,7 @@ public class PasswordResetController {
     }
 
 
-    @PostMapping("/savePassword")
+    @PostMapping("/auth/savePassword")
     public String savePassword(@RequestParam("token") String token, @RequestParam("password") String password) {
         PasswordResetToken passToken = userService.getPasswordResetToken(token);
         if (passToken == null || passToken.isExpired()) {
