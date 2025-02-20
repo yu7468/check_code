@@ -86,6 +86,9 @@ public class UserService {
     } 
     
     public void createPasswordResetTokenForUser(User user, String token) {
+        // 删除旧令牌
+        passwordResetTokenRepository.deleteByUser(user);
+        
         PasswordResetToken passToken = new PasswordResetToken(token, user);
         passwordResetTokenRepository.save(passToken);
     }
@@ -100,8 +103,7 @@ public class UserService {
     }
 
 	public User findUserByEmail(String userEmail) {
-		// TODO 自動生成されたメソッド・スタブ
-		return null;
+		return userRepository.findByEmail(userEmail); 
 	}
     
 

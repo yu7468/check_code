@@ -47,5 +47,11 @@ public class PasswordResetToken {
         this.createdAt = new Timestamp(System.currentTimeMillis());
         this.expired = false; // 或设置有效期
     }
+    
+    public boolean isExpired() {
+        // 24小时有效期
+        long tokenAge = System.currentTimeMillis() - createdAt.getTime();
+        return tokenAge > 24 * 60 * 60 * 1000;
+    }
 
 }
