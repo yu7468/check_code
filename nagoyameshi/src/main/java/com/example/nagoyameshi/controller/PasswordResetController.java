@@ -32,7 +32,7 @@ public class PasswordResetController {
     @GetMapping("/auth/reset")
     public String showResetPasswordForm() {
         // 返回重置密码的表单页面
-        return "passwordResetForm"; // 确保页面名称正确
+        return "auth/reset"; // 确保页面名称正确
     }
 
     @PostMapping("/auth/reset")
