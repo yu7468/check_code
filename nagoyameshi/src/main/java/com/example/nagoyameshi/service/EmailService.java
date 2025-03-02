@@ -1,36 +1,30 @@
 package com.example.nagoyameshi.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.example.nagoyameshi.entity.PasswordResetToken;
+import com.example.nagoyameshi.entity.User;
+import com.example.nagoyameshi.repository.PasswordResetTokenRepository;
 
 @Service
 public class EmailService {
+	private final PasswordResetTokenRepository passwordResetTokenRepository;
+	public EmailService(PasswordResetTokenRepository passwordResetTokenRepository) {
+		this.passwordResetTokenRepository = passwordResetTokenRepository;
+	}
+	
+	 @Transactional
+	 public void create(User user, String token) {
+		 PasswordResetToken passwordResetToken = new PasswordResetToken();
+	        
+		 passwordResetToken.setUser(user);
+		 passwordResetToken.setToken(token);        
+	        
+		 passwordResetTokenRepository.save(passwordResetToken);
+	    }
 
-    @Autowired
-    private JavaMailSender emailSender;
-
-    @Autowired
-    private Environment env;
-
-    // 发送简单邮件
-    public void sendSimpleMessage(String to, String subject, String text) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(to);
-        message.setSubject(subject);
-        message.setText(text);
-        emailSender.send(message);
-    }
-
-    // 发送 HTML 格式邮件
-    public void sendHtmlMessage(String to, String subject, String htmlText) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(to);
-        message.setSubject(subject);
-        message.setText(htmlText);
-        message.setFrom(env.getProperty("spring.mail.username"));
-        emailSender.send(message);
-    }
+	public PasswordResetToken getPasswordResetToken(String token) {
+		return passwordResetTokenRepository.findByToken(token);
+	}    
 }

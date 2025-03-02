@@ -1,5 +1,7 @@
 package com.example.nagoyameshi.controller;
 
+import java.util.UUID;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -11,10 +13,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.nagoyameshi.entity.PasswordResetToken;
 import com.example.nagoyameshi.entity.User;
 import com.example.nagoyameshi.entity.VerificationToken;
 import com.example.nagoyameshi.event.SignupEventPublisher;
+import com.example.nagoyameshi.form.ResetForm;
 import com.example.nagoyameshi.form.SignupForm;
+import com.example.nagoyameshi.service.EmailService;
 import com.example.nagoyameshi.service.UserService;
 import com.example.nagoyameshi.service.VerificationTokenService;
 
@@ -25,11 +30,13 @@ public class AuthController {
 	private final UserService userService; 
 	private final SignupEventPublisher signupEventPublisher;
 	private final VerificationTokenService verificationTokenService;
+	private final EmailService emailService; 
     
-	public AuthController(UserService userService, SignupEventPublisher signupEventPublisher, VerificationTokenService verificationTokenService) {       
+	public AuthController(UserService userService, SignupEventPublisher signupEventPublisher, VerificationTokenService verificationTokenService, EmailService emailService) {       
         this.userService = userService;  
         this.signupEventPublisher = signupEventPublisher;
         this.verificationTokenService = verificationTokenService;
+        this.emailService = emailService;
     }
     
 	@GetMapping("/login")
@@ -78,6 +85,42 @@ public class AuthController {
             User user = verificationToken.getUser();  
             userService.enableUser(user);
             String successMessage = "会員登録が完了しました。";
+            model.addAttribute("successMessage", successMessage);            
+        } else {
+            String errorMessage = "トークンが無効です。";
+            model.addAttribute("errorMessage", errorMessage);
+        }
+        
+        return "auth/verify";         
+    } 
+	
+	@GetMapping("/reset")
+    public String reset(Model model) {
+		model.addAttribute("resetForm", new ResetForm());
+        return "auth/reset"; 
+    }
+	
+	@PostMapping("/reset")
+    public String resetPassword(HttpServletRequest request, @RequestParam("email") String userEmail) {
+        User user = userService.findUserByEmail(userEmail);
+        if (user == null) {
+            return "redirect:/login?error=User not found!";
+        }
+
+        String token = UUID.randomUUID().toString();
+        userService.createPasswordResetTokenForUser(user, token);
+
+        return "redirect:/login?resetPassword";
+    }
+	
+	@GetMapping("/reset/verify")
+    public String resetVerify(@RequestParam(name = "token") String token, Model model) {
+		PasswordResetToken passwordResetToken = emailService.getPasswordResetToken(token);
+        
+        if (passwordResetToken != null) {
+            User user = passwordResetToken.getUser();  
+            userService.enableUser(user);
+            String successMessage = "パスワードリセットが完了しました。";
             model.addAttribute("successMessage", successMessage);            
         } else {
             String errorMessage = "トークンが無効です。";
