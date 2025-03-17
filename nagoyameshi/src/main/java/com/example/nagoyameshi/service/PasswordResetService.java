@@ -38,7 +38,7 @@ public class PasswordResetService {
         message.setTo(email);
         message.setSubject("パスワードリセット");
         message.setText("パスワードリセットリンクをクリックしてください: " + resetUrl + "\n\n" +
-                "このリンクは24時間で有効期限が切れます。もしこのリクエストを行っていない場合は、このメールを無視してください。");
+                "このリンクとタッチして、パスワードリセットを行ってください。もしこのリクエストを行っていない場合は、このメールを無視してください。");
         mailSender.send(message);
     }
 
