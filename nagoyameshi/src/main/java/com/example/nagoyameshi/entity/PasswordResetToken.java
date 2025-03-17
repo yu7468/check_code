@@ -1,10 +1,9 @@
 package com.example.nagoyameshi.entity;
 
-import java.sql.Timestamp;
+import java.time.Instant;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.annotation.Transient;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,13 +34,9 @@ public class PasswordResetToken {
     private String email;
 
     @CreatedDate
-    private Timestamp createdAt;
+    private Instant createdAt;
 
     @LastModifiedDate
-    private Timestamp updatedAt;
-
-    @Transient
-    private boolean expired;
+    private Instant updatedAt;
 
 }
-

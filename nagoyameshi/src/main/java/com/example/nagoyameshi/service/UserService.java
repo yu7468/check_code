@@ -1,5 +1,8 @@
 package com.example.nagoyameshi.service;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,14 +17,12 @@ import com.example.nagoyameshi.repository.RoleRepository;
 import com.example.nagoyameshi.repository.UserRepository;
 
 @Service
-
 public class UserService {
-	private final UserRepository userRepository;
+    private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
 
-    
     public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, PasswordResetTokenRepository passwordResetTokenRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;        
@@ -61,25 +62,25 @@ public class UserService {
         userRepository.save(user);
     } 
     
- // メールアドレスが登録済みかどうかをチェックする
+    // メールアドレスが登録済みかどうかをチェックする
     public boolean isEmailRegistered(String email) {
         User user = userRepository.findByEmail(email);  
         return user != null;
     }
     
- // パスワードとパスワード（確認用）の入力値が一致するかどうかをチェックする
+    // パスワードとパスワード（確認用）の入力値が一致するかどうかをチェックする
     public boolean isSamePassword(String password, String passwordConfirmation) {
         return password.equals(passwordConfirmation);
     }
     
- // ユーザーを有効にする
+    // ユーザーを有効にする
     @Transactional
     public void enableUser(User user) {
         user.setEnabled(true); 
         userRepository.save(user);
     } 
     
- // メールアドレスが変更されたかどうかをチェックする
+    // メールアドレスが変更されたかどうかをチェックする
     public boolean isEmailChanged(UserEditForm userEditForm) {
         User currentUser = userRepository.getReferenceById(userEditForm.getId());
         return !userEditForm.getEmail().equals(currentUser.getEmail());      
@@ -90,6 +91,9 @@ public class UserService {
         passwordResetTokenRepository.deleteByUser(user);
         
         PasswordResetToken passToken = new PasswordResetToken();
+        passToken.setUser(user);
+        passToken.setToken(token);
+        passToken.setExpiryDate(Instant.now().plus(24, ChronoUnit.HOURS)); // 设置令牌有效期为24小时
         passwordResetTokenRepository.save(passToken);
     }
 
@@ -102,10 +106,7 @@ public class UserService {
         return passwordResetTokenRepository.findByToken(token);
     }
 
-	public User findUserByEmail(String userEmail) {
-		return userRepository.findByEmail(userEmail); 
-	}
-    
-
-
+    public User findUserByEmail(String userEmail) {
+        return userRepository.findByEmail(userEmail); 
+    }
 }

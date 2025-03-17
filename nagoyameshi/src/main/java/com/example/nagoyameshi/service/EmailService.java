@@ -1,30 +1,24 @@
 package com.example.nagoyameshi.service;
 
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 
-import com.example.nagoyameshi.entity.PasswordResetToken;
-import com.example.nagoyameshi.entity.User;
-import com.example.nagoyameshi.repository.PasswordResetTokenRepository;
-
-@Service
 public class EmailService {
-	private final PasswordResetTokenRepository passwordResetTokenRepository;
-	public EmailService(PasswordResetTokenRepository passwordResetTokenRepository) {
-		this.passwordResetTokenRepository = passwordResetTokenRepository;
-	}
-	
-	 @Transactional
-	 public void create(User user, String token) {
-		 PasswordResetToken passwordResetToken = new PasswordResetToken();
-	        
-		 passwordResetToken.setUser(user);
-		 passwordResetToken.setToken(token);        
-	        
-		 passwordResetTokenRepository.save(passwordResetToken);
-	    }
+	@Autowired
+    private JavaMailSender emailSender;
 
-	public PasswordResetToken getPasswordResetToken(String token) {
-		return passwordResetTokenRepository.findByToken(token);
-	}    
+    @Autowired
+    private Environment env;
+
+    public void sendSimpleMessage(String to, String subject, String text) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(text);
+        message.setFrom(env.getProperty("spring.mail.username"));
+        emailSender.send(message);
+    }
+
 }

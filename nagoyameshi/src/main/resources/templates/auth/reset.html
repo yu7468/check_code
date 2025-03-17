@@ -16,9 +16,21 @@
                     <div class="col-xxl-9 col-xl-10 col-lg-11">                            
                         <h1 class="mb-4 text-center">パスワードリセット</h1>
                         
-                        <form action="@{/reset}" method="post">
-						    <input type="email" name="email" placeholder="メールアドレスを入力してください" required>
-						    <button type="submit">パスワードリセットリンクを送信</button>
+                        <form th:action="@{/reset}" method="post">
+							<label for="email">メールアドレス</label>
+							<div th:if="${errorMessage}" class="alert alert-danger">
+					            <span th:text="${errorMessage}"></span>
+					        </div>
+					        <div th:if="${successMessage}" class="alert alert-danger">
+					            <span th:text="${successMessage}"></span>
+					        </div>
+					        
+							<div class="form-group d-flex justify-content-center my-4">
+						    	<input type="email" name="email" placeholder="メールアドレスを入力してください" required>
+							</div>
+						     <div class="form-group d-flex justify-content-center my-4">
+						    	<button class="btn text-black shadow-sm w-100 nagoyameshi-btn" type="submit">パスワードリセットリンクを送信</button>
+						     </div>
 						</form>						
                         
                     </div>

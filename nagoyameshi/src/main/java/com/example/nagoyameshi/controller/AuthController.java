@@ -19,7 +19,7 @@ import com.example.nagoyameshi.entity.VerificationToken;
 import com.example.nagoyameshi.event.SignupEventPublisher;
 import com.example.nagoyameshi.form.ResetForm;
 import com.example.nagoyameshi.form.SignupForm;
-import com.example.nagoyameshi.service.EmailService;
+import com.example.nagoyameshi.service.PasswordResetService;
 import com.example.nagoyameshi.service.UserService;
 import com.example.nagoyameshi.service.VerificationTokenService;
 
@@ -30,13 +30,13 @@ public class AuthController {
 	private final UserService userService; 
 	private final SignupEventPublisher signupEventPublisher;
 	private final VerificationTokenService verificationTokenService;
-	private final EmailService emailService; 
+	private final PasswordResetService passwordResetService; 
     
-	public AuthController(UserService userService, SignupEventPublisher signupEventPublisher, VerificationTokenService verificationTokenService, EmailService emailService) {       
+	public AuthController(UserService userService, SignupEventPublisher signupEventPublisher, VerificationTokenService verificationTokenService, PasswordResetService passwordResetService) {       
         this.userService = userService;  
         this.signupEventPublisher = signupEventPublisher;
         this.verificationTokenService = verificationTokenService;
-        this.emailService = emailService;
+        this.passwordResetService = passwordResetService;
     }
     
 	@GetMapping("/login")
@@ -94,41 +94,55 @@ public class AuthController {
         return "auth/verify";         
     } 
 	
-	@GetMapping("/reset")
+    @GetMapping("/reset")
     public String reset(Model model) {
-		model.addAttribute("resetForm", new ResetForm());
+        model.addAttribute("resetForm", new ResetForm());
         return "auth/reset"; 
     }
-	
-	@PostMapping("/reset")
-    public String resetPassword(HttpServletRequest request, @RequestParam("email") String userEmail) {
+    
+    @PostMapping("/reset")
+    public String reset(HttpServletRequest request, @RequestParam("email") String userEmail, RedirectAttributes redirectAttributes) {
         User user = userService.findUserByEmail(userEmail);
         if (user == null) {
-            return "redirect:/login?error=User not found!";
+            redirectAttributes.addFlashAttribute("errorMessage", "ユーザーが見つかりません。");
+            return "redirect:/auth/reset";
         }
 
         String token = UUID.randomUUID().toString();
-        userService.createPasswordResetTokenForUser(user, token);
+        passwordResetService.createPasswordResetToken(user, token);
 
-        return "redirect:/login?resetPassword";
+        String resetUrl = request.getRequestURL().toString().replace(request.getServletPath(), "") + "/reset/verify?token=" + token;
+        passwordResetService.sendPasswordResetEmail(userEmail, resetUrl);
+
+        redirectAttributes.addFlashAttribute("successMessage", "パスワードリセットリンクが送信されました。");
+        return "redirect:/auth/reset";
     }
-	
-	@GetMapping("/reset/verify")
+    
+    @GetMapping("/reset/verify")
     public String resetVerify(@RequestParam(name = "token") String token, Model model) {
-		PasswordResetToken passwordResetToken = emailService.getPasswordResetToken(token);
-        
-        if (passwordResetToken != null) {
-            User user = passwordResetToken.getUser();  
-            userService.enableUser(user);
-            String successMessage = "パスワードリセットが完了しました。";
-            model.addAttribute("successMessage", successMessage);            
-        } else {
-            String errorMessage = "トークンが無効です。";
-            model.addAttribute("errorMessage", errorMessage);
+        try {
+            passwordResetService.validatePasswordResetToken(token);
+            model.addAttribute("token", token);
+            return "auth/reset-password";
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "auth/verify";
         }
+    }
+
+    @PostMapping("/savePassword")
+    public String savePassword(@RequestParam("token") String token, @RequestParam("password") String password, RedirectAttributes redirectAttributes) {
+        PasswordResetToken passwordResetToken = passwordResetService.getPasswordResetToken(token);
         
-        return "auth/verify";         
-    } 
-	
+        if (passwordResetToken != null && !passwordResetToken.isExpired()) {
+            User user = passwordResetToken.getUser();
+            userService.changeUserPassword(user, password);
+            redirectAttributes.addFlashAttribute("successMessage", "パスワードが正常にリセットされました。");
+            return "redirect:/login";
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage", "トークンが無効です。");
+            return "redirect:/reset";
+        }
+    }
 
 }
