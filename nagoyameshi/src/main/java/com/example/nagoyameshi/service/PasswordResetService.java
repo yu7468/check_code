@@ -41,4 +41,5 @@ public class PasswordResetService {
                 "このリンクは24時間で有効期限が切れます。もしこのリクエストを行っていない場合は、このメールを無視してください。");
         mailSender.send(message);
     }
+
 }

@@ -1,8 +1,5 @@
 package com.example.nagoyameshi.service;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -93,7 +90,6 @@ public class UserService {
         PasswordResetToken passToken = new PasswordResetToken();
         passToken.setUser(user);
         passToken.setToken(token);
-        passToken.setExpiryDate(Instant.now().plus(24, ChronoUnit.HOURS)); // 设置令牌有效期为24小时
         passwordResetTokenRepository.save(passToken);
     }
 

@@ -121,7 +121,7 @@ public class AuthController {
     @GetMapping("/reset/verify")
     public String resetVerify(@RequestParam(name = "token") String token, Model model) {
         try {
-            passwordResetService.validatePasswordResetToken(token);
+            passwordResetService.getPasswordResetToken(token);
             model.addAttribute("token", token);
             return "auth/reset-password";
         } catch (IllegalArgumentException e) {
@@ -134,15 +134,11 @@ public class AuthController {
     public String savePassword(@RequestParam("token") String token, @RequestParam("password") String password, RedirectAttributes redirectAttributes) {
         PasswordResetToken passwordResetToken = passwordResetService.getPasswordResetToken(token);
         
-        if (passwordResetToken != null && !passwordResetToken.isExpired()) {
             User user = passwordResetToken.getUser();
             userService.changeUserPassword(user, password);
             redirectAttributes.addFlashAttribute("successMessage", "パスワードが正常にリセットされました。");
             return "redirect:/login";
-        } else {
-            redirectAttributes.addFlashAttribute("errorMessage", "トークンが無効です。");
-            return "redirect:/reset";
-        }
+       
     }
 
 }
